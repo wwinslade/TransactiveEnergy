@@ -17,3 +17,16 @@ test.py
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.docx
+*.txt
+*.pdf
+*.xls
+*.xlsx
+*.csv
+*.json
+*.xml
+*.yaml
+*.yml
+*.log
+*.sql
+*.sqlite
