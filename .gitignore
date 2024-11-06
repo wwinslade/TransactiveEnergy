@@ -1,12 +1,10 @@
 # Python
+*/__pycache__
+/venv
+/.venv
 /__pycache__
-backend/__pycache__
-backend/.venv
-backend/venv
-backend/data
-backend/test.py
-backend/test.ipynb
-test.py
+.vs
+.vscode
 
 # Misc
 .DS_Store
