@@ -25,6 +25,7 @@ yarn-error.log*
 *.xml
 *.yaml
 *.yml
+!environment.yml
 *.log
 *.sql
 *.sqlite
