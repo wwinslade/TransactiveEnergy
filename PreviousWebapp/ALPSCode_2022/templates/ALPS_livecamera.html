@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>ALPS Web App</title>
+
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<!--Added this for link -->
+		<script type = "text/javascript" src="../static/js/links.js"></script>
+		<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<!-- The correct links to the css file are below -->
+		<link rel="stylesheet" type="text/css" href="../static/css/index.css">
+
+<!--This stuff up here is important and works, maybe we can do something about the useless graphs though -->
+	</head>
+
+	<body id="body">
+
+	    <nav class="top-bar" data-topbar>
+
+			<div class="container">
+				<a href="#" onClick="return showHome()">
+					<img src="../static/img/curent.png" alt="current image" width="250px" height="63px" align="right">
+					<h2 id="brand">ALPS<br>
+					<span id="brand-small">Automated Load Planning System</span></h2>
+				</a>
+			</div>
+		</header>
+
+		<header class="navbar-inverse" id="navbar">
+			<div class="container">
+				<ul class="nav navbar-nav">
+					<li id="navHome" class="nav-link"><a href="{{ url_for('ALPS_home') }}" onclick="return showHome()" value="Display">Home</a></li>
+					<li id="navPowergen" class="nav-link"><a href="{{ url_for('ALPS_powergeneration') }}" onclick="return showPowergeneration()" value= "Display">Hourly Prices</a></li>
+					<li id="navConditionals" class="nav-link"><a href="{{ url_for('ALPS_conditions') }}" onclick="return showConditions()" value="Display">Smart Home Manager</a></li>
+					<li id="navCamera" class="nav-link active"><a href="{{ url_for('ALPS_camera') }}" onclick="return showLivecamera()" value="Display">Live Camera</a></li>
+				</ul>
+
+				<ul class="nav navbar-nav navbar-right">
+
+					<div class="dropdown">
+
+						<button class="btn btn-warning dropdown-toggle dropdown-menu-right" type="button" data-toggle="dropdown">Project Websites
+						<span class="caret"></span></button>
+							<ul class="dropdown-menu">
+
+								<li><a href="{{ url_for ('Frontpanel') }}">MK 530 website</a></li>
+								<li><a href="{{ url_for ('R_home') }}">ReVv website</a></li>
+								<li><a href="{{ url_for ('home') }}">SHEMS website</a></li>
+								
+							</ul>
+					</div>
+			  </ul>      
+			</div>
+		</nav>
+
+
+		<!--Header for live camera tab-->
+		<div id="container" class ="container">
+			<div id="content">
+				<section id="Home" class="page shown">
+					<div class="section-title">
+						<h4>Live Camera</h4>
+					</div>
+					<div class="content-section-container">
+						<p class="content-section text-justify">
+						We can change this tab to whatever we want. Maybe total savings? Time off vs time on with total savings of money during time off.
+						</p>
+					</div>
+								
+		
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+
+				<footer class="row">
+				  <div class="large-12 columns">
+					<hr>
+
+					<div class="row">
+					  <div class="large-12 columns">
+						<!--<p>© Copyright by <i>Smart Home and Grid Laboratory (SHGL) at the University of Tennessee Knoxville </i></p>-->
+					  </div>
+					</div>
+				  </div>
+				</footer>
+			</section>
+		</div>
+	</div>
+	</body>
+</html>
+				
+

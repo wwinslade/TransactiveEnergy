@@ -1,0 +1,293 @@
+<!doctype html>
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SHEM DEMO | SETTINGS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/foundation.css" />
+    <script src="js/modernizr.js"></script>
+
+    </br>
+     <div class="row">
+        <div class="large-12 columns">
+    <!-- Desktop Slider -->
+             <img src="lib/curent.png" height="30%" width="30%">
+      <!-- End Desktop Slider -->
+        </div></br></br></br></br>
+              <h1 class="the-one" align="center"><b>Smart Energy Management System Demo</b></h1>
+    </div>
+    </br>
+</head>
+
+<body>
+<div class="row">
+  <div class="large-12 columns">
+    <!-- Navigation -->
+
+    <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="index.html">SHEMS</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="index.html">MARKET</a></li>
+      <li><a href="demand.html">DEMAND</a></li>
+      <li><a href="shems.html">SHEMS</a></li>
+      <li class="active"><a href="setting.html">SETTINGS</a></li>
+      <li class="disabled"><a href="live.html">GO LIVE</a></li>
+      <li><a href="SHEMWebApp.html">WEB APP</a></li>
+    </ul>
+    <div class="container-fluid">
+		<ul class="nav navbar-nav navbar-right">	<!--Larry: added a new line-->
+      <div class="dropdown">	<!--Larry: added a new line-->
+
+        <button class="btn btn-lg btn-link dropdown-toggle dropdown-menu-right" type="button" data-toggle="dropdown">Admin Tools<!--Larry: added a new line-->
+        <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span></button><!--Larry: added a new line-->
+
+          <ul class="dropdown-menu"><!--Larry: added a new line-->
+
+            <li><a href="php/setPolicy0.php" target="_blank">All Devices: Turn On</a></li><!--Larry: added a new line-->
+            <li><a href="#" onclick="window.open('php/setPolicy1.php');return false">All Devices: Price Threshold</a></li><!--Larry: added a new line //alternate method-->
+            <li><a href="php/setPolicy3.php" target="_blank">All Devices: Frequency Threshold</a></li><!--Larry: added a new line-->
+            <li><a href="php/setPolicy2.php" target="_blank">All Devices: Turn Off</a></li><!--Larry: added a new line-->
+
+          </ul><!--Larry: added a new line-->
+
+      </div><!--Larry: added a new line-->
+    </ul>
+  </div>
+  </div>
+</nav><!-- End Navigation -->
+  </div>
+</div>
+
+</br>
+
+        <div class="row">
+            <div class="large-6 columns">
+                <div class="callout panel">
+                    <p><b>System is operating in <font color="green">Smart Model</font>.</b></p>
+                </div>
+                </div>
+            				    <div class="large-4 columns">
+				      <label>Model selection</label>
+				      <select>
+				        <option value="Saving">Energy Saving</option>
+				        <option value="Smart">Smart</option>
+				        <option value="Comfortable">Comfortable</option>
+				      </select>
+				    </div>
+            <a href="#" class="medium success button">Change</a>
+            </div>
+        </div>
+
+
+<div class="row">
+  <div class="large-12 columns">
+      <dl class="accordion" data-accordion>
+  <dd>
+    <a href="#panel1" align="middle"><b>Electrical Water Heater</b></a>
+    <div id="panel1" class="content">
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Current Status: T = <font color="green">150 F</font>;   T_Low = <font color="blue">100 F</font>;   T_High = <font color="red">160 F</font>; <font color="green">ON</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+            <div class="large-12 columns">
+            <div class="large-4 medium-4 columns">
+                <label> The T_Low Setting: </label>
+				<input type="text" placeholder="T_Low Value" />
+            </div>
+            <div class="large-4 medium-4 columns">
+                <label> The T_High Setting: </label>
+				<input type="text" placeholder="T_High Value" />
+            </div>
+             <div class="large-4 medium-4 columns">
+                <a href="#" class="medium secondary button">Submit Settings</a>
+             </div>
+            </div>
+        </div>
+    </div>
+  </dd>
+  <dd>
+    <a href="#panel2" align="middle"><b>Air Conditioner</b></a>
+    <div id="panel2" class="content">
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Current Status: T = <font color="green">73 F</font>;   T_Low =<font color="blue"> 65 F</font>;   T_High = <font color="red">75 F</font>; <font color="red">OFF</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+            <div class="large-12 columns">
+            <div class="large-4 medium-4 columns">
+                <label> The T_Low Setting: </label>
+				<input type="text" placeholder="T_Low Value" />
+            </div>
+            <div class="large-4 medium-4 columns">
+                <label> The T_High Setting: </label>
+				<input type="text" placeholder="T_High Value" />
+            </div>
+             <div class="large-4 medium-4 columns">
+                <a href="#" class="medium secondary button">Submit Settings</a>
+             </div>
+            </div>
+        </div>
+    </div>
+  </dd>
+  <dd>
+    <a href="#panel3" align="middle"><b>Lights</b></a>
+    <div id="panel3" class="content">
+          <div class="row">
+            <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Light#1_Status: <font color="red">OFF</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+            <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Light#2_Status: <font color="red">OFF</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+                    <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Light#3_Status: <font color="red">OFF</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+                    <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Light#4_Status: <font color="red">OFF</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+                    <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Light#5_Status:<font color="red"> OFF</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+        </div>
+    </div>
+  </dd>
+
+  <dd>
+    <a href="#panel4" align="middle"><b>Electrical Vehicle</b></a>
+    <div id="panel4" class="content">
+           <div class="row">
+            <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Current Status: SOC= <font color="green">60%</font>; SOC_Target = <font color="blue">90%</font>; <font color="green">ON</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+            <div class="large-12 columns">
+                </br>
+            <div class="large-8 medium-4 columns">
+                <label> The Target of SOC: </label>
+				<input type="text" placeholder="SOC Value (%)" />
+            </div>
+             <div class="large-4 medium-4 columns">
+                <a href="#" class="medium secondary button">Submit Settings</a>
+             </div>
+            </div>
+        </div>
+    </div>
+  </dd>
+
+  <dd>
+    <a href="#panel5"align="middle"><b>Others</b></a>
+    <div id="panel5" class="content">
+
+              <div class="row">
+            <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Dishwasher#1_Status: <font color="red">OFF</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+            <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Washing Machine#2_Status: <font color="red">OFF</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+                    <div class="large-12 columns">
+                <div class="large-8 medium-4 columns">
+                <div class="callout panel">
+                    <p><b>Dryer#3_Status: <font color="red">OFF</font>.</b></p>
+                </div>
+                </div>
+                <a href="#" class="medium success button">ON</a>
+                <a href="#" class="medium alert button">OFF</a>
+            </div>
+
+        </div>
+    </div>
+  </dd>
+</dl>
+  </div>
+</div>
+
+</br>
+
+<footer class="row">
+  <div class="large-12 columns">
+    <hr>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <p>© Copyright by <i>Smart Home and Grid Laboratory (SHGL) at the University of Tennessee Knoxville </i></p>
+      </div>
+    </div>
+  </div>
+</footer>
+    <link rel="stylesheet" href="http://www.nyiso.com/public/site/css/graphs.css" type="text/css"/><!-- Causes unknown nav issue, interferes with bootstrap-->
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.js"></script>
+    <script>
+      $(document).foundation();
+      var doc = document.documentElement;
+      doc.setAttribute('data-useragent', navigator.userAgent);
+    </script>
+
+  </body>
+</html>

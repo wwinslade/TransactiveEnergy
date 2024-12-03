@@ -1,0 +1,1 @@
+g++ main.cpp ctrl_plugs.cpp  `mysql_config --cflags` `mysql_config --libs` -L/usr/lib  -o sems.bin

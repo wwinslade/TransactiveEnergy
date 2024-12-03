@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>ALPS - SHM</title>
+
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<!--Added this for link -->
+		<script type = "text/javascript" src="../static/js/links.js"></script>
+		<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<!-- The correct links to the css file are below -->
+		<link rel="stylesheet" type="text/css" href="../static/css/style.css">
+		<link rel="stylesheet" type="text/css" href="../static/css/index.css">
+		<link rel="stylesheet" type="text/css" href="../static/css/foundation.css">
+		<script src="https://kit.fontawesome.com/b852344663.js" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="../static/css/CARDstyle.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
+	</head>
+	<script>
+		var mapApp = new Map(); //will be used if any modifications are done on appliances
+		//var updateStateApp1 = false;
+		//var updateStateApp1 = false;
+		function convert(input) {
+			console.log(input, moment(input, 'HH:mm:ss').format('h:mm:ss A'));
+ 		   return moment(input, 'HH:mm:ss').format('h:mm:ss A');
+		}
+		function test(apps){
+			for( let i = 0; i < apps.length; i++){
+				createAppCard(apps[i]);
+				console.log(apps[i].userOnTime[0])
+				console.log(apps[i].userOffTime)
+			}
+			
+		}
+		function tempTest(apps){
+			for( let i = 0; i < apps.length; i++){
+				updateDatabase(apps[i],false);
+			}
+		}
+		var updateADRFridge = false;
+		function createCards(vars) {
+			for (thing in vars){
+				console.log(thing);
+			}
+			createFridgeCard(vars);
+		}
+		function changed(appName, feature) {
+			if (updateADRFridge){
+				updateADRFridge = false;
+			}
+			else{
+				updateADRFridge = true;
+			}
+			console.log(updateADRFridge);
+		}
+
+		function appChange(appName, feature){
+
+			//first check the global variable for the mappings to see if the change has occured.
+		}
+
+		function updateDatabase(appliance, isFridge){
+			let appName = appliance.applianceName;
+			if (isFridge){
+				let queryStr = '/update_db?'.concat('appName=',appName);
+				console.log(updateADRFridge);
+				if (updateADRFridge) { 
+					const cb = document.querySelector('#fridgeCB');
+					queryStr = queryStr.concat('&adr=',cb.checked)
+				}
+				$.getJSON(queryStr,
+                function(data) {
+              //do nothing
+            });
+			}
+			else{
+				let queryStr = '/update_db?'.concat('appName=',appName);
+				console.log(queryStr);
+				if (true) { 
+					let cb = document.querySelector('#'.concat(appName, "cs"));
+					queryStr = queryStr.concat('&currState=',cb.checked);
+					console.log(queryStr);
+					cb = document.querySelector('#'.concat(appName, "adr"));
+					queryStr = queryStr.concat('&adrApp=',cb.checked);
+					console.log(queryStr);
+				}
+				$.getJSON(queryStr,
+                function(data) {
+              //do nothing
+            });
+			}
+		}
+		function createFridgeCard(fridge){
+		  let parentId = "tr0";
+		  //console.log(parentId);
+		  var parent = document.getElementById(parentId);
+
+		  var tblCell = document.createElement("td");
+		  tblCell.setAttribute("style", "display: inline-block;padding: 9px 50px 9px 50px;");
+		  var card = document.createElement("div");
+		  
+		  card.setAttribute("id", "fridge");
+		  card.setAttribute("class", "device-card");
+		  
+		  
+		  card.innerHTML =`<div class="device-card-top">
+			<cardTitle> ${fridge.applianceName} </cardTitle>`;
+		
+		  card.innerHTML +=`
+			  <h6> Current status: ${fridge.currState} </h6>
+			  <h6>Desired temp:     ${fridge.desiredTemp}</h6>
+			  <h6>High boundary:    ${fridge.highBoundary}</h6>
+			  <h6>Low boundary:     ${fridge.lowBoundary}</h6>
+			  <h6>Pre-cooling time: ${fridge.minsBefore}</h6>
+			`
+			if(fridge.adrEnabled == 1){
+			card.innerHTML += ` <p>	<input type="checkbox" id="fridgeCB" onclick="changed('${fridge.applianceName}', 'adrEnabled')" checked>
+				<label>Enable ADR</label>
+				<br>`
+			}
+			else{
+			card.innerHTML += ` <p>	<input type="checkbox" id="fridgeCB" onclick="changed('${fridge.applianceName}', 'adrEnabled')">
+				<label>Enable ADR</label>
+				<br>`
+			}
+
+		  tblCell.appendChild(card);
+		  parent.appendChild(tblCell);
+		}
+	
+	</script>
+	<script>
+
+		function createAppCard(app){
+		let parentId = "tr0";
+		  //console.log(parentId);
+		  var parent = document.getElementById(parentId);
+
+		  var tblCell = document.createElement("td");
+		  tblCell.setAttribute("style", "display: inline-block;padding: 9px 50px 9px 50px;");
+		  var card = document.createElement("div");
+		  
+		  card.setAttribute("id", app.applianceName);
+		  card.setAttribute("class", "device-card");
+		  
+		  let test = "";						
+		  test = test.concat('\
+						<div class="device-card-top">\
+							<cardTitle>',app.applianceName,' </cardTitle>\
+								<!-- order is important here, careful not to change anything -->\
+								<span class="switch-container">');
+										if (app.currState == "false"){
+											test = test.concat('<label class="switch">\
+																		<input type="checkbox" id = "',app.applianceName,'cs"></input>\
+																		<span class="slider"></span>\
+																	</label>');
+										}
+										else{
+											test = test.concat('<label class="switch">\
+																		<input type="checkbox" id = "',app.applianceName,'cs" checked ></input>\
+																		<span class="slider"></span>\
+																	</label>');
+										}
+			test = test.concat('\
+								</span>\
+						</div>\
+						<div class="device-card-bottom">\
+							<p class="cardSettings">\
+								');
+		if(app.userOnTime[0] != ""){
+			let timeStr1 = convert(app.userOnTime[0]);
+			let timeStr2 = convert(app.userOnTime[1]);
+
+			test = test.concat('<input type="checkbox" id="onTimeCheckbox',app.applianceName,'" onclick="timeAppear(this.id, \'',app.applianceName, '\')" checked>\
+								<label for="onTimeCheckbox">Schedule On-Time</label>\
+								<br>','<input type="time" class="onTimeStart',app.applianceName,'"  value = ',app.userOnTime[0],' style="display:inline-block;">\
+								<input type="time" class="onTimeStart',app.applianceName,'"  value = ',app.userOnTime[1],' style="display:inline-block;">');
+		}
+		else{
+			test = test.concat('<input type="checkbox" id="onTimeCheckbox',app.applianceName,'" onclick="timeAppear(this.id, \'',app.applianceName, '\')">\
+								<label for="onTimeCheckbox">Schedule On-Time</label>\
+								<br>','<input type="time" class="onTimeStart',app.applianceName,'" style="display:inline-block;visibility:hidden;">\
+								<input type="time" class="onTimeStart',app.applianceName,'" style="display:inline-block;visibility:hidden;">');
+		}
+		if(app.userOffTime[0] != ""){
+			test = test.concat('<br>','\
+								<input type="checkbox" id="offTimeCheckbox',app.applianceName,'" onclick="timeAppear(this.id, \'',app.applianceName, '\')" checked>\
+								<label>Schedule Off-Time</label>\
+								<br>','<input type="time" class="offTimeStart',app.applianceName,'" value = ', app.userOffTime[0],' style="display:inline-block;">\
+								<input type="time" class="offTimeStart',app.applianceName,'" value = ',app.userOffTime[1],' style="display:inline-block;">\
+								<br>');
+		}
+		else{
+			test = test.concat('<br>','\
+								<input type="checkbox" id="offTimeCheckbox',app.applianceName,'" onclick="timeAppear(this.id, \'',app.applianceName, '\')">\
+								<label>Schedule Off-Time</label>\
+								<br>','<input type="time" class="offTimeStart',app.applianceName,'"  style="display:inline-block;visibility:hidden;">\
+								<input type="time" class="offTimeStart',app.applianceName,'" style="display:inline-block;visibility:hidden;">\
+								<br>');
+		}						
+		
+		
+		if(app.adrEnabled == 1){
+			test = test.concat('\
+				<input type="checkbox" id = "',app.applianceName,'adr" checked>\
+				<label>Enable ADR</label>\
+				</p>\
+				</div>');
+			
+		}
+		else{
+		
+			test = test.concat('\
+				<input type="checkbox" id = "',app.applianceName,'adr" >\
+				<label>Enable ADR</label>\
+				</p>\
+				</div>');
+		}
+		card.innerHTML += `${test}`;
+		tblCell.appendChild(card);
+		parent.appendChild(tblCell);
+	}
+				
+	</script>
+	<body id="body">
+		
+		
+		
+		<!--This is the top header of the HTML Doc, Picture and ALPS-->
+	    <nav class="top-bar" data-topbar>
+			<div class="container">
+				<a href="#" onClick="return showHome()">
+					<img src="../static/img/curent.png" alt="current image" width="250px" height="63px" align="right">
+					<h2 id="brand" style="background: white">ALPS<br>
+					<span id="brand-small">Automated Load Planning System</span></h2>
+				</a>
+			</div>
+
+
+		<!--Website Navigation with local and global Navigation-->
+		<header class="navbar-inverse" id="navbar">
+			<div class="container">
+				
+				<!--This is the Local Website Navigation tabs-->
+				<ul class="nav navbar-nav">
+					<li id="navHome" class="nav-link"><a href="{{ url_for('ALPS_home') }}" onclick="return showHome()" value="Display">Home</a></li>
+					<li id="navPowergen" class="nav-link"><a href="{{ url_for('ALPS_powergeneration') }}" onclick="return showPowergeneration()" value= "Display">Graphs</a></li>
+					<li id="navConditionals" class="nav-link active"><a href="{{ url_for('ALPS_conditions') }}" onclick="return showConditions()" value="Display">Smart Home Manager</a></li>
+				</ul>
+
+				<!--This is the GLobal Website's Navigation dropdown-->
+				<ul class="nav navbar-nav navbar-right" id="project-drop">
+					<div class="dropdown">
+						<button class="btn btn-warning dropdown-toggle dropdown-menu-right" type="button" data-toggle="dropdown" id="navButton">Project Websites
+						<span class="caret"></span></button>
+							<ul class="dropdown-menu">
+								<li><a href="{{ url_for ('Frontpanel') }}">MK 530 website</a></li>
+								<li><a href="{{ url_for ('R_home') }}">ReVv website</a></li>
+								<li><a href="{{ url_for ('home') }}">SHEMS website</a></li>
+							</ul>
+					</div>
+					
+				</ul>
+			</div>
+		</header>
+		</nav>
+		
+
+		<!--Daniel: Changed tabs to say user settings instead of policy
+		& added what this tab is going to be in terms of ADR on/off + SHEMS on/off-->
+		
+		<!--Section That contains Header about User Stettings-->
+		<div id="container" class ="container">
+			<div id="content">
+				<section id="home" class="page shown">
+					<div class="section-title">
+						<h4></h4>
+					</div>
+						</p>
+					</div>
+			</div>
+		</div>
+		
+		<!-- all device cards below -->
+		
+		<div class="wrapper">
+			<table>
+				<tr id="tr0" style="text-align: center;">
+					<!-- dynamic card creation -->
+				</tr>
+			</table>
+		</div>
+		<script>test({{applianceArray|safe}})</script>
+		<script>createCards(JSON.parse({{fridge|tojson}}))</script>
+		<!--<button type="submit" name="createCard" onclick='updateDatabase(JSON.parse({{fridge|tojson}}),true)'>Submit</button>-->
+		<div style="width:100%;text-align:center;">
+		<button type="submit" id="createCardButton" onclick='tempTest({{applianceArray|safe}})' >Submit</button>
+		</div>		
+		<footer class="row">
+		  <div class="large-12 columns">
+			<hr></hr>
+
+			<div class="row">
+			  <div class="large-12 columns">
+				<p>© Copyright by <i>Smart Home and Grid Laboratory (SHGL) at the University of Tennessee Knoxville </i></p>
+			  </div>
+			</div>
+		  </div>
+		</footer>
+	</body>
+
+	<script>
+		
+		function timeAppear(idName, appName) {
+			
+			let idStr = "onTimeStart".concat(appName);
+			var checkBox = document.getElementById(idName);
+			var timeStart = document.getElementsByClassName(idStr);
+			
+			idStr = "offTimeStart".concat(appName);
+			var timeStop = document.getElementsByClassName(idStr);
+			
+			if (checkBox.checked == true ){
+				
+				if (idName == ("onTimeCheckbox".concat(appName))){	
+					timeStart[0].style.visibility = "visible";
+					timeStart[1].style.visibility = "visible";
+				}
+				else{
+					timeStop[0].style.visibility = "visible";
+					timeStop[1].style.visibility = "visible";
+				}
+				
+			}
+			else {
+				
+				if (checkBox.id == "onTimeCheckbox".concat(appName)){
+					timeStart[0].style.visibility = "hidden";
+					timeStart[1].style.visibility = "hidden";
+				}
+				else{
+					timeStop[0].style.visibility = "hidden";
+					timeStop[1].style.visibility = "hidden";
+				}
+				
+			}
+		}
+		
+	</script>
+
+</html>
+				
+

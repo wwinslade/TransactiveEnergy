@@ -1,0 +1,833 @@
+html{
+	color: #292929;
+}
+
+a{
+	color: #292929 !important;
+}
+
+a:focus{
+	outline: none !important;
+}
+
+a, u {
+	text-decoration: none !important;
+}
+
+.navbar-inverse{
+	color: #f5f5f5;
+	background: #81ae6c;
+}
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:active,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus{
+	-webkit-transition: background-color 0.7s;
+	transition: background-color 0.7s;
+	background-color: #679451;
+}
+
+#header{
+	background: #ffffff;
+	color: #81ae6c;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 25px;
+}
+
+.section-title{
+	margin-top: 50px;
+}
+
+.section-title h4{
+	font-family: 'Montserrat', sans-serif;
+	color: #ffffff;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 10px 20px;
+	float: left;
+	background: #feba31;
+	box-shadow: 15px 5px 0px -5px #feaa01;
+}
+
+.content-section-container{
+	width: 100%;
+	clear: left;
+	background: #f6f4ee;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+figcaption {
+	text-align: center;
+}
+
+.content-section{
+	width: 100%;
+	padding: 20px 30px;
+}
+
+.page.hidden{
+	display: none;
+}
+
+.page.shown{
+	display: inline;
+}
+
+#brand{
+	color: #81ae6c;
+	text-decoration: none;
+	padding-bottom: 20px;
+	padding-top: 20px;
+	-webkit-transition: color 0.3s;
+	transition: color 0.3s;
+	font-size: 40px;
+	line-height: 20px;
+}
+
+#brand-small{
+	line-height: 0px;
+	font-size: 18px;
+}
+
+#header .container > a{
+	text-decoration: none !important;
+}
+
+#brand:hover{
+	color: #679451;
+	text-decoration: none;
+}
+
+.navbar-nav > li > a{
+	color: #f5f5f5;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.nav-link, .navbar-inverse .navbar-nav > li > a{
+	color: #f5f5f5 !important;
+}
+
+.nav-link:hover, .navbar-inverse .navbar-nav > li > a:hover{
+	-webkit-transition: background-color 0.3s;
+	transition: background-color 0.3s;
+	background-color: #9dc08c;
+}
+
+#container{
+	background-color: #ffffff;
+	height: 52px;
+}
+
+#body{
+	background-color: #ffffff;
+}
+
+#price-graph, #frequency-graph-container{
+	width: 100%;
+	height: 350px;
+	clear: left;
+	background: #f6f4ee;
+}
+
+.axis path, .axis line{
+	fill: none;
+	stroke: #292929;
+	shape-rendering: crispEdges;
+}
+
+#mouseLine{
+	shape-rendering: crispEdges;
+}
+
+#appliance-list{
+	list-style: none;
+}
+
+#appliance-list hr{
+	background-color: rgba(0,0,0,0.1);
+	border: none;
+	height: 1px;
+	margin: 1px 0px 0px 0px;
+}
+
+.appliance{
+	font-size: 16px;
+}
+
+.appliance:hover, .appliance.settings-menu-shown{
+	background: #ede9de;
+}
+
+.appliance a:hover p{
+	text-decoration: underline;
+}
+
+.appliance img{
+	height: 36px;
+	padding-right: 30px;
+}
+
+.appliance p{
+	line-height: 36px;
+	margin: 0px;
+	padding: 10px;
+}
+
+.appliance button{
+	padding: 0px !important;
+}
+
+.appliance button,
+.appliance input[type="Submit"]{
+	height: 30px;
+	margin: 3px auto;
+	width: 100%;
+	background-color: #81ae6c;
+	color: #f5f5f5;
+	border: none;
+	border-radius: 5px;
+	-webkit-transition: background-color 0.2s, color 0.2s, border 0.2s;
+	transition: background-color 0.2s, color 0.2s, border 0.2s;
+}
+
+.appliance button:hover,
+.appliance input[type="Submit"]:hover,
+#timeMenu button:hover,
+#confirm-delete-dialog button:hover{
+	background-color: #ffffff;
+	color: #81ae6c;
+	border: 2px solid #81ae6c;
+}
+
+.settings-menu{
+	-webkit-transition: max-height 0.5s;
+	transition: max-height 0.5s;
+	padding-top: 0px;
+	overflow: hidden;
+}
+
+.settings-menu-shown:not(.appliance){
+	max-height: 1000px;
+	background: #ede9de;
+}
+
+.settings-menu-hidden{
+	max-height: 0px;
+}
+
+.settings-menu strong{
+	padding-top: 15px;
+}
+
+.settings-menu hr{
+	margin-bottom: 15px !important;
+}
+
+input[type="text"].error{
+	border: 2px solid #ff0000;
+}
+
+.settings-icon{
+	height: 26px;
+	padding: 3px !important;
+	border: 1px solid rgba(0,0,0,0);
+	border-radius: 5px;
+	-webkit-transition: 0.2s border;
+	transition: 0.2s border;
+}
+
+.settings-icon.active{
+	background: #f6f4ee;
+	border: 1px solid rgba(0,0,0,1);
+}
+
+label{
+	font-weight: normal;
+	padding-left: 5px;
+}
+
+.off-periods-list{
+	padding: 0px 0px 10px 0px !important;
+	display: block;
+}
+
+#time-menu-container,
+#confirm-delete-container{
+	background: rgba(0,0,0,0.3);
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 5;
+	display: none;
+}
+
+#time-menu-container.shown,
+#confirm-delete-container.shown{
+	display: block;
+}
+
+#timeMenu,
+#confirm-delete-dialog{
+	max-width: 300px;
+	background: #ffffff;
+	position: relative;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+}
+
+#timeMenu hr{
+	margin: 0px 20px 20px 20px;
+}
+
+#timeMenu h4{
+	padding: 20px;
+	margin: 0px;
+	width: 100%;
+}
+
+#timeMenuForm{
+	padding: 10px 10px 20px 10px;
+	max-width: 270px;
+}
+
+.time-input{
+	width: 50px;
+	display: inline-block;
+}
+
+.time-label{
+	width: 100px;
+}
+
+#timeMenu button{
+	height: 30px;
+	width: calc(33% - 6px);
+	margin: 3px 3px;
+	padding: 0px;
+	background-color: #81ae6c;
+	color: #f5f5f5;
+	border: none;
+	border-radius: 5px;
+	-webkit-transition: background-color 0.2s, color 0.2s, border 0.2s;
+	transition: background-color 0.2s, color 0.2s, border 0.2s;
+}
+
+#confirm-delete-dialog button{
+	height: 30px;
+	width: calc(50% - 6px);
+	margin: 3px 3px;
+	background-color: #81ae6c;
+	color: #f5f5f5;
+	border: none;
+	border-radius: 5px;
+	-webkit-transition: background-color 0.2s, color 0.2s, border 0.2s;
+	transition: background-color 0.2s, color 0.2s, border 0.2s;
+}
+
+.time-select-day{
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+	margin: 0px 1px;
+	text-align: center;
+	line-height: 30px;
+	font-weight: bold;
+	color: #ffffff !important;
+	background: #c0c0c0;
+	-webkit-transition: background 0.3s;
+	transition: background 0.3s;
+}
+
+.time-select-day:active,
+.time-select-day:focus{
+	text-decoration: none;
+}
+
+.time-select-day:hover{
+	background: #d0d0d0;
+	text-decoration: underline;
+}
+
+.time-select-day.selected{
+	background: #81ae6c;
+}
+
+@media (min-width: 300px) and (max-width: 550px){
+	#usage-composition-graph{
+		width: 300px !important;
+		position: relative;
+		display: block;
+		margin: auto;
+	}
+}
+
+@media (min-width: 551px) and (max-width: 630px){
+	#usage-composition-graph{
+		width: 100%;
+	}
+
+	#usage-composition-container{
+		height: 600px !important;
+	}
+}
+
+@media (min-width: 300px) and (max-width: 630px){
+	#usage-info{
+		width: calc(100% - 40px) !important;
+		top: 125px !important; /* Why does this work????? */
+	}
+}
+
+@media (min-width: 300px) and (max-width: 550px){
+	#usage-composition-graph1{
+		width: 300px !important;
+		position: relative;
+		display: block;
+		margin: auto;
+	}
+}
+
+@media (min-width: 551px) and (max-width: 630px){
+	#usage-composition-graph1{
+		width: 100%;
+	}
+
+	#usage-composition-container1{
+		height: 600px !important;
+	}
+}
+
+@media (min-width: 300px) and (max-width: 630px){
+	#usage-info1{
+		width: calc(100% - 40px) !important;
+		top: 125px !important; /* Why does this work????? */
+	}
+}
+
+@media (min-width: 300px) and (max-width: 550px){
+	#usage-composition-graph2{
+		width: 300px !important;
+		position: relative;
+		display: block;
+		margin: auto;
+	}
+}
+
+@media (min-width: 551px) and (max-width: 630px){
+	#usage-composition-graph2{
+		width: 100%;
+	}
+
+	#usage-composition-container2{
+		height: 600px !important;
+	}
+}
+
+@media (min-width: 300px) and (max-width: 630px){
+	#usage-info2{
+		width: calc(100% - 40px) !important;
+		top: 125px !important; /* Why does this work????? */
+	}
+}
+
+@media (min-width: 300px) and (max-width: 550px){
+	#usage-composition-graph3{
+		width: 300px !important;
+		position: relative;
+		display: block;
+		margin: auto;
+	}
+}
+
+@media (min-width: 551px) and (max-width: 630px){
+	#usage-composition-graph3{
+		width: 100%;
+	}
+
+	#usage-composition-container3{
+		height: 600px !important;
+	}
+}
+
+@media (min-width: 300px) and (max-width: 630px){
+	#usage-info3{
+		width: calc(100% - 40px) !important;
+		top: 125px !important; /* Why does this work????? */
+	}
+}
+
+@media (min-width: 300px) and (max-width: 550px){
+	#usage-composition-graph4{
+		width: 300px !important;
+		position: relative;
+		display: block;
+		margin: auto;
+	}
+}
+
+@media (min-width: 551px) and (max-width: 630px){
+	#usage-composition-graph4{
+		width: 100%;
+	}
+
+	#usage-composition-container4{
+		height: 600px !important;
+	}
+}
+
+@media (min-width: 300px) and (max-width: 630px){
+	#usage-info4{
+		width: calc(100% - 40px) !important;
+		top: 125px !important; /* Why does this work????? */
+	}
+}
+
+
+
+
+@media (max-width: 768px){
+	#appliance-list{
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+}
+
+@media (min-width: 631px) and (max-width: 1000px){
+	#usage-composition-graph{
+		width: 300px;
+	}
+	#usage-info{
+		width: calc(100% - 340px) !important;
+	}
+}
+
+@media (min-width: 1001px){
+	#usage-composition-graph{
+		width: 550px;
+	}
+	#usage-info{
+		width: calc(100% - 590px) !important;
+	}
+}
+
+.on-off-button{
+	list-style: none;
+	border-radius: 5px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	width: 94px;
+	padding: 0px;
+	overflow: hidden;
+	right: 0px;
+	margin: 10px;
+}
+
+.on-off-button li{
+	display: inline-block;
+	color: #454545;
+	width: 46px;
+	height: 36px;
+	text-align: center;
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+.on-off-button li a{
+	line-height: 36px;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.on-off-button li a.active{
+	background-color: #81ae6c !important;
+	color: #ffffff !important;
+}
+
+#confirm-delete-dialog{
+	padding: 20px;
+}
+
+#confirm-delete-dialog p{
+	padding: 0px 0px 10px 0px;
+}
+
+.threshold-div{
+	overflow: hidden;
+	-webkit-transition: max-height 0.2s;
+	transition: max-height 0.2s;
+}
+
+.threshold-div.shown{
+	max-height: 100px;
+}
+
+.threshold-div.hidden{
+	max-height: 0px;
+}
+
+.frequency-div{
+	overflow: hidden;
+	-webkit-transition: max-height 0.2s;
+	transition: max-height 0.2s;
+}
+
+.frequency-div.shown{
+	max-height: 100px;
+}
+
+.frequency-div.hidden{
+	max-height: 0px;
+}
+.graph-title{
+	font-weight: bold;
+}
+
+#usage-info{
+	margin: 20px 20px 20px 20px;
+	height: 260px;
+	float: right;
+	clear: left;
+}
+
+#usage-info p{
+	padding: 5px !important;
+	margin: 0px;
+	text-align: center;
+}
+
+#usage-info{
+	position: relative;
+	width: calc(100% - 40px);
+	height: 260px;
+	top: calc(50% - 20px);
+	margin: 20px;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+#usage-composition-container{
+	height: 300px;
+}
+
+#usage-info1{
+	margin: 20px 20px 20px 20px;
+	height: 260px;
+	float: right;
+	clear: left;
+}
+
+#usage-info1 p{
+	padding: 5px !important;
+	margin: 0px;
+	text-align: center;
+}
+
+#usage-info1{
+	position: relative;
+	width: 500px;
+	height: 260px;
+	top: calc(50% - 20px);
+	margin: 20px;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+#usage-composition-container1{
+	height: 300px;
+}
+
+#usage-info2{
+	margin: 20px 20px 20px 20px;
+	height: 260px;
+	float: right;
+	clear: left;
+}
+
+#usage-info2 p{
+	padding: 5px !important;
+	margin: 0px;
+	text-align: center;
+}
+
+#usage-info2{
+	position: relative;
+	width: 500px;
+	height: 260px;
+	top: calc(50% - 20px);
+	margin: 20px;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+#usage-composition-container2{
+	height: 300px;
+}
+
+#usage-info3{
+	margin: 20px 20px 20px 20px;
+	height: 260px;
+	float: right;
+	clear: left;
+}
+
+#usage-info3 p{
+	padding: 5px !important;
+	margin: 0px;
+	text-align: center;
+}
+
+#usage-info3{
+	position: relative;
+	width: 500px;
+	height: 260px;
+	top: calc(50% - 20px);
+	margin: 20px;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+#usage-composition-container3{
+	height: 300px;
+}
+#usage-info4{
+	margin: 20px 20px 20px 20px;
+	height: 260px;
+	float: right;
+	clear: left;
+}
+
+#usage-info4 p{
+	padding: 5px !important;
+	margin: 0px;
+	text-align: center;
+}
+
+#usage-info4{
+	position: relative;
+	width: 500px;
+	height: 260px;
+	top: calc(50% - 20px);
+	margin: 20px;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+#usage-composition-container4{
+	height: 300px;
+}
+
+#energy-usage-container{
+	margin-top: 10px;
+}
+
+table{
+	width: 100%;
+	height: 100%;
+}
+
+table, th, td{
+	/* border: 1px solid rgba(0,0,0,0.1); */
+}
+
+td{
+	width: 33%;
+}
+
+.scale-button-container{
+	position: relative;
+	top: -340px;
+	left: 60px;
+	width: 220px;
+}
+
+.scale-button{
+	margin: 0px 0px;
+	border: none;
+	background: rgba(0,0,0,0);
+	border-radius: 5px;
+}
+
+.scale-button:hover{
+	background: rgba(0,0,0,0.1);
+}
+
+#new-appliance-button{
+	margin: -10px 30px 20px 30px;
+	padding: 3px 30px;
+	height: 30px;
+	font-size: inherit;
+	background-color: #81ae6c;
+	color: #f5f5f5;
+	border: none;
+	border-radius: 5px;
+	-webkit-transition: background-color 0.2s, color 0.2s, border 0.2s;
+}
+
+#new-appliance-button:hover{
+	background-color: #ffffff;
+	color: #81ae6c;
+	border: 2px solid #81ae6c;
+}
+#new-user-button{
+	margin: -10px 30px 20px 30px;
+	padding: 3px 30px;
+	height: 30px;
+	font-size: inherit;
+	background-color: #81ae6c;
+	color: #f5f5f5;
+	border: none;
+	border-radius: 5px;
+	-webkit-transition: background-color 0.2s, color 0.2s, border 0.2s;
+}
+
+#new-user-button:hover{
+	background-color: #ffffff;
+	color: #81ae6c;
+	border: 2px solid #81ae6c;
+}
+.my-hover{
+	background-color: silver;
+}
+
+.widget{
+	margin-left: 420px;
+}
+
+.green-text{
+	color: #81ae6c;
+}
+
+.pd-all{
+	padding: 20px;
+}
+
+/*The following three classes successfully alter bootstrap's defaults*/
+.dropdown-menu li>a{
+	background-color: white;
+}
+/*.dropdown-menu>li{
+	padding:5px; border-bottom:1px solid red;border-left:1px solid red;border-right:1px solid red
+}*/
+.dropdown-menu li>a:hover{
+	background:rgb(92,184,92);
+}

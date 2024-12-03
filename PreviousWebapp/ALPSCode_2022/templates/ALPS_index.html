@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>ALPS - Home</title>
+		
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		
+		<!--This is the pathing for the javascript hyperlink codes this file contains function definitions that are used to redirect the page-->
+		<script type = "text/javascript" src="../static/js/links.js"></script>
+
+		<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<!-- The correct links to the css file are below -->
+		<link rel="stylesheet" type="text/css" href="../static/css/index.css">
+		
+		
+<!--This stuff up here is important and works, maybe we can do something about the useless graphs though -->
+	</head>
+
+	<body id="body">
+		
+		
+		
+	    <nav class="top-bar" data-topbar>
+			
+			<div class="container">
+				
+				<a href="#" onClick="return showHome()">
+					<img src="../static/img/curent.png" alt="current image" width="250px" height="63px" align="right">
+					<h2 id="brand">ALPS<br>
+					<span id="brand-small">Automated Load Planning System</span></h2>
+					
+				</a>
+			</div>
+		</header>
+		
+
+		<header class="navbar-inverse" id="navbar">
+			<div class="container">
+				<ul class="nav navbar-nav">
+					<li id="navHome" class="nav-link active"><a href="{{ url_for('ALPS_home') }}" onclick="return showHome()" value="Display">Home</a></li>
+					<li id="navPowergen" class="nav-link"><a href="{{ url_for('ALPS_powergeneration') }}" onclick="return showPowergeneration()" value= "Display">Graphs</a></li>
+					<li id="navConditionals" class="nav-link"><a href="{{ url_for('ALPS_conditions') }}" onclick="return showConditions()" value="Display">Smart Home Manager</a></li>
+					
+				</ul> 
+
+				<ul class="nav navbar-nav navbar-right">	
+
+					<div class="dropdown">	
+
+						<button class="btn btn-warning dropdown-toggle dropdown-menu-right" type="button" data-toggle="dropdown">Project Websites
+						<span class="caret"></span></button>
+
+							<ul class="dropdown-menu">
+								
+								<li><a href="{{ url_for ('Frontpanel') }}">MK 530 website</a></li>
+								<li><a href="{{ url_for ('R_home') }}">ReVv website</a></li>
+								<li><a href="{{ url_for ('home') }}">SHEMS website</a></li>
+								
+							</ul>
+					</div>
+			  </ul>
+			</div>
+		</nav>
+
+
+		<!--Daniel: Changed the About section in the index page-->
+		
+		<!--This Section is the header for the ABOUT section in the Home Page-->
+		<div id="container" class ="container">
+			<div id="content">
+				<section id="home" class="page shown">
+					
+					<br>
+					<br>
+					<figure>
+						<img src="../static/img/team.jpg" alt="team image" class="center" width="80%">
+						<figcaption> (Left to right) Daniel White, Andrew Webb, Karan Patel, Andrew Wilburn, Noah Archer, Noah Sewell </figcaption>
+					</figure>
+					
+					<div class="section-title">
+						<h4>About ALPS</h4>
+					</div>
+					<div class="content-section-container">
+						<p class="content-section text-justify">
+						
+						The Automated Load Planning System (ALPS) offers a solution for managing energy consumption among consumers
+						and dealing with high demand for the power grid. It addresses how to flatten a demand curve, i.e. the duck 
+						curve, and prevent potential blackouts, by using a website to control appliances. ALPS also demonstrates how 
+						automated demand response (ADR) signals can be integrated into smart home systems to shift demand from high to 
+						low stress periods, with the ultimate goal of saving time, money, and resources for both power providers and 
+						consumers.
+						<br>
+						<br>
+						The goals that this project needs to achieve for the customer is to be able to manage energy consumption efficiently, 
+						overall saving money, and flatten the demand curve for power production saving time and resources for generation companies. 
+						In order to accomplish these main objectives, we will create a website with ADR in order to control appliances within a 
+						certain price threshold. This will allow customers to control their appliances and save money, while also saving resources 
+						for the grid to function properly. In this website it is necessary to create it to encompass the functionality of ADR, customer 
+						input and customizability with home appliances, and maintain security on the website.
+						<br>
+						<br>
+						This project is directed to become centralized around the consumer, while also benifiting heavy power suppliers with functionality 
+						on the grid. With the focus on the consumer, we intend to focus primarily on saving the consumer money by managing their home 
+						appliances efficiently. The future goals that this project will focus on is developing a mobile app where consumers can manage their 
+						appliances outside of their home, customizable dynamic pricing where the consumer will change at what cost do they want to turn off 
+						certain appliances, and security with custom profiles and login credentials.
+					</div>	
+
+					<br><br>
+					<figure>
+						<img src="../static/img/diagram1.jpg" alt="diagram1 image" class="center" width="100%">
+						<figcaption>
+							This figure shows the complete construction and wiring of all the devices of the ALPS model home. 
+							The current transformer on the bottom right detects current flow to the fridge and feeds the reduced
+							current to the IoTaWatt (WiFi Energy Monitor) on the top right. The IoTaWatt is independent from the 
+							Raspberry Pi and records power draw over time; the graphs of this data can be found on the 
+							<a href="{{ url_for('ALPS_powergeneration') }}" onclick="return showPowergeneration()" value= "Display"><u>Graphs</u></a> 
+							tab of this website. The Raspberry Pi uses its internet connection via ethernet, the USB thermometer, and 
+							its connection to the relay array via GPIO pins to control all the devices of the model house. The
+							WiFi plugs (seen at the top of the house of the left) are controlled via a combination of Python, PHP, 
+							and Ajax scripts that update a device database. On the other hand, the fridge requires a hard wired
+							connection from the relay array to control its internal compressor for cooling.
+						</figcaption>
+					</figure>
+					
+					<br><br>
+
+					
+					<div class="section-title">
+						<h4>Integration Diagram</h4>
+					</div>
+					<div class="content-section-container">
+						<p class="content-section text-justify">
+						The diagram below shows how all the pieces of the puzzle work together to create a cohesive product to save the customer money and 
+						flatten the demand curve. The automated system is based around the Python scripts which run constantly. The Python scripts handle 
+						interpreting the pricing and power consumption data, communicating with the website, and telling the refridgerator and other home  
+						appliances to turn on and off. The website user interface shows the user the status of each appliance and allows the user to change
+						settings individually. The Raspberry Pi is responsible for taking power consumption data from the fridge through the power meter so
+						it can be recorded.
+					</div>
+		
+					<!-- "center" class is in index.css -->
+					<img src="../static/img/diagram.png" alt="diagram image" class="center" width="60%">					
+		
+				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+				<script type="text/javascript" src="http://www.nyiso.com/public/site/js/highcharts.js"></script>
+
+				<script type="text/javascript">
+				
+		
+
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+
+				<footer class="row">
+				  <div class="large-12 columns">
+					<hr>
+
+					<div class="row">
+					  <div class="large-12 columns">
+						<!-- <p>© Copyright by <i>Smart Home and Grid Laboratory (SHGL) at the University of Tennessee Knoxville </i></p> -->
+					  </div>
+					</div>
+				  </div>
+				</footer>
+			</section>
+		</div>
+	</div>
+	</body>
+</html>
+				
+
