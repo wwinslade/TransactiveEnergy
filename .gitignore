@@ -6,6 +6,10 @@
 .vs
 .vscode
 
+# Ignore all .txt files except for requirements.txt (env packages list)
+*.txt
+!requirements.txt
+
 # Misc
 .DS_Store
 .env.local
@@ -16,8 +20,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.docx
-!requirements.txt
-*.txt
 *.pdf
 *.xls
 *.xlsx
