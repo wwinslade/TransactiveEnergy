@@ -9,7 +9,7 @@ import subprocess
 import json
 from databases import Data
 
-from rpi_rf import RFDevice
+# from rpi_rf import RFDevice
 from transmitterPrimetest import send_code
 
 app = Flask(__name__)
@@ -236,4 +236,4 @@ def MK_channel5off():
 	return render_template("FrontPanel_SHEMSabout.html")
 
 if __name__ == "__main__":
-		app.run(port=10000,debug=True, host='0.0.0.0')
+		app.run(debug=True)
