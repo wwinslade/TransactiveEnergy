@@ -6,6 +6,7 @@
 .vs
 .vscode
 __pycache__/
+__init__.pyc
 
 # Ignore all .txt files except for requirements.txt (env packages list)
 *.txt
