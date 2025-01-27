@@ -14,7 +14,7 @@ def send_code(code):
     rfdevice.enable_tx()
     rfdevice.tx_repeat = repeat
 
-
+    
    
     rfdevice.tx_code(code,protocol,pulselength,length)
     rfdevice.cleanup()

@@ -14,7 +14,6 @@ from transmitterPrimetest import send_code
 
 app = Flask(__name__)
 
-
 #These are the websote address for the different urls 
 #ex 0.0.0.0:5000/powergeneratopn The render template is the name of the
 #corresponding html files in the template folder. A couple were left
