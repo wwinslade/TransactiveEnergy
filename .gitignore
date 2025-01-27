@@ -5,6 +5,7 @@
 /__pycache__
 .vs
 .vscode
+__pycache__/
 
 # Ignore all .txt files except for requirements.txt (env packages list)
 *.txt
