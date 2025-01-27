@@ -16,6 +16,11 @@ class SyncDevice(ABC):
     self._energyConsumption = []
 
   @abstractmethod
+  def on(self):
+    """Turn the device on"""
+    pass
+
+  @abstractmethod
   def off(self):
     """Turn off the device"""
     pass
@@ -50,15 +55,6 @@ class SyncDevice(ABC):
     """Fetch all specified user off times. Returns list of intervals"""
     return self.userSpecifiedOffTimes
   
-  @abstractmethod
-  def set_energy_consumption(self, consumption):
-    """Record device energy consumption"""
-    pass
-  @abstractmethod
-  def get_energy_consumption(self):
-    """Fetch a device's energy consumption"""
-    pass
-
 class AsyncDevice(ABC):
   def __init__(self, name):
     self.name = name
