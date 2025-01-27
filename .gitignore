@@ -1,3 +1,6 @@
+# Project Specific
+app/services/test.py
+
 # Python
 */__pycache__
 /venv
