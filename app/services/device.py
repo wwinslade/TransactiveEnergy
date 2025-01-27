@@ -20,7 +20,7 @@ class SyncDevice(ABC):
     """Turn off the device"""
     pass
 
-  def status(self):
+  def get_status(self):
     """Fetch device on/off status"""
     return self._state
   
@@ -63,21 +63,28 @@ class AsyncDevice(ABC):
   def __init__(self, name):
     self.name = name
     self.type = "Unspecified"
-    self.ipv4 = None
+    
     
     self.userSpecifiedOffTimes = []
     
+    self._ipv4 = None
     self._adr = False
     self._state = None
     self._energyConsumption = []
   
+  def get_status(self):
+    """Fetch the status of a device"""
+    return self._state
+
   @abstractmethod
   async def on():
     """Turn the asynchronous device on"""
     pass
-
+  
+  @abstractmethod
   async def off():
     """Turn the asynchronous device off"""
     pass
+
 
   
