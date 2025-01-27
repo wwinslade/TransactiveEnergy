@@ -9,7 +9,9 @@ import asyncio
 class KasaSwitch(AsyncDevice):
   def __init__(self, name, ipv4):
     """Init for KasaSwitches"""
-    self.name = name
+    super().__init__(name)
+    
+    self.type = "Kasa SmartPlug"
     self._ipv4 = ipv4
 
     # Call the Kasa library
