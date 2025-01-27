@@ -1,5 +1,6 @@
 # Project Specific
 app/services/test.py
+PreviousWebapp/
 
 # Python
 */__pycache__
