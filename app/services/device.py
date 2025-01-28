@@ -1,6 +1,12 @@
 # device.py
 # Created by William Winslade on 27 Jan 2025
 
+'''
+This file defines two device interfaces, one for devices which will
+have asynchronous methods to call (example kasa-python library requires async 
+methods), and one for synchronous devices
+'''
+
 from abc import ABC, abstractmethod
 
 class SyncDevice(ABC):

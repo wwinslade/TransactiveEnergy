@@ -1,5 +1,16 @@
+# fridge.py
+# Created by William Winslade on 27 Jan 2025
+
 from .device import SyncDevice
 import RPi.GPIO as GPIO
+
+'''
+This file defines the Fridge class, a child class of the SyncDevice interface
+as defined in services/device.py
+
+The fridge for this project is controlled by an external relay board that we interact
+with using the Pi's GPIO pins. The RPi.GPIO library is used to that end.
+'''
 
 class Fridge(SyncDevice):
   """class Fridge is a child class of the interface SyncDevice"""
