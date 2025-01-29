@@ -1,6 +1,8 @@
 # ubibot.py
 # Created by William Winslade on 28 Jan 2025
 
+# Ubibot API docs: https://www.ubibot.com/platform-api/1232/quick-start/
+
 import requests
 import json
 import os
