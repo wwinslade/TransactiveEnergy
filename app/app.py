@@ -6,13 +6,13 @@
 from flask import Flask, render_template
 
 from services import *
+from routes import bp
 
+# Create the flask app
 app = Flask(__name__)
 
-# Default (root) route
-@app.route("/")
-def root():
-  return render_template("index.html")
+# Register routes
+app.register_blueprint(bp)
 
 
 if __name__ == "__main__":
