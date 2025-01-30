@@ -13,12 +13,12 @@ class SyncDevice(ABC):
 
   def __init__(self, name):
     self.name = name
-    self.type = "Unspecified"
-    self.ipv4 = None
+    self.type = "Unspecified" 
     self.userSpecifiedOffTimes = []
     
+    self._ipv4 = ""
     self._adr = False
-    self._state = None
+    self._state = False
     self._energyConsumption = []
 
   @abstractmethod
@@ -69,9 +69,9 @@ class AsyncDevice(ABC):
     
     self.userSpecifiedOffTimes = []
     
-    self._ipv4 = None
+    self._ipv4 = ""
     self._adr = False
-    self._state = None
+    self._state = False
     self._energyConsumption = []
   
   def get_status(self):
