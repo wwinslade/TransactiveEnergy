@@ -1,6 +1,7 @@
 # Project Specific
 app/services/test.py
 PreviousWebapp/
+db.sqlite3
 
 # Python
 */__pycache__
