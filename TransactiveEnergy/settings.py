@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 # Login Routes
 LOGIN_REDIRECT_URL = "/"  # Redirect users after login
 LOGOUT_REDIRECT_URL = "/user/login"  # Redirect users after logout
-LOGIN_URL = "/users/login/"  # Ensure login is required for authentication
+LOGIN_URL = "/user/login/"  # Ensure login is required for authentication
 
 # Application definition
 
