@@ -1,5 +1,5 @@
 # Project Specific
-app/services/test.py
+apps/devices/services/test.py
 PreviousWebapp/
 db.sqlite3
 
