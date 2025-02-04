@@ -3,6 +3,9 @@ app/services/test.py
 PreviousWebapp/
 db.sqlite3
 
+# Django
+migrations/
+
 # Python
 */__pycache__
 /venv
