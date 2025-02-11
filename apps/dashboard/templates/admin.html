@@ -1,11 +1,39 @@
 {% extends "base.html" %}
-{% block title %}Operator Panel | Transactive Energy{% endblock %}
+{% block title %}Operator Panel{% endblock %}
 {% block content %}
 
 <h1 class="tomorrow-medium">Operator Panel</h1>
 <div class="row">
   <div class="col">
-    <a href="#" class="btn btn-success bg-curent-green">Add New Device</a>
+    <a href="{% url 'new_device' %}" class="btn btn-success bg-curent-green">Add New Device</a>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Device Name</th>
+          <th>Device Type</th>
+          <th>Device Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for device in devices %}
+        <tr>
+          <td>{{ device.name }}</td>
+          <td>{{ device.device_type }}</td>
+          <td>{{ device.status }}</td>
+          <td>
+            <a href="#" class="btn btn-success bg-curent-green">On</a> 
+            <a href="#" class="btn btn-success bg-curent-green">Off</a>
+            <a href="{% url 'update_device' device.id %}" class="btn btn-primary bg-curent-green">Edit</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock %}

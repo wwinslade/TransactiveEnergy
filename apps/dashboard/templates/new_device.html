@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Create New Device{% endblock %}
+{% block content %}
+<h1>Create New Device</h1>
+
+<form method="POST" action="">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary bg-curent-green">Create Device</button>
+</form>
+
+{% endblock %}
