@@ -12,7 +12,7 @@ The fridge for this project is controlled by an external relay board that we int
 with using the Pi's GPIO pins. The RPi.GPIO library is used to that end.
 '''
 
-class Fridge(SyncDevice):
+class FridgeAPI(SyncDevice):
   """class Fridge is a child class of the interface SyncDevice"""
   
   def __init__(self, name):
