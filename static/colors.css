@@ -3,5 +3,13 @@
 }
 
 .btn-curent-green {
-  background-color: #007800;
+  color: white !important;
+  background-color: #007800 !important;
+  border-color: #007800 !important;
+}
+
+.btn-curent-green-alt {
+  color: #007800 !important;
+  background-color: white !important;
+  border-color: white !important;
 }
