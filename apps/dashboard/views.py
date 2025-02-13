@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from devices.models import Device, KasaSwitch, Fridge
+from apps.devices.models import Device, KasaSwitch, Fridge
 from .forms import DeviceForm
 
 # Create your views here.
@@ -29,7 +29,7 @@ def CreateNewDevice(request):
 
 @login_required()
 def UpdateDevice(request, pk):
-  device = Device.objects.get(id=pk)
+  device = Device.objects.get(uuid=pk)
   form = DeviceForm(instance=device)
 
   if request.method == 'POST':
