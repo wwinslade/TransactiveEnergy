@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .models import Device
+from devices.models import Device, KasaSwitch, Fridge
 from .forms import DeviceForm
 
 # Create your views here.
