@@ -47,8 +47,10 @@
               <a class="nav-link" href="#">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Control Panel</a>
+              <a class="nav-link" href="{% url 'admin' %}">Operator Panel</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'webcam_stream' %}">Webcam Stream</a>
           </ul>
         </div>
         {% if request.user.is_authenticated %}
