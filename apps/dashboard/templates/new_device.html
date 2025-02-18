@@ -5,8 +5,53 @@
 
 <form method="POST" action="">
   {% csrf_token %}
-  {{ form.as_p }}
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    {{ form.name }}
+  </div>
+  
+  <div class="mb-3">
+    <label for="type" class="form-label">Type</label>
+    {{ form.type }}
+  </div>
+  
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    {{ form.description }}
+  </div>
+  
+  <div class="mb-3">
+    <label for="status" class="form-label">Status</label>
+    {{ form.status }}
+  </div>
+  
+  <div id="kasa-options" style="display: none;">
+    <label for="kasa_ipv4">IPv4</label>
+    <input type="text" name="kasa_ipv4" id="kasa_ipv4"> 
+  </div>
+
   <button type="submit" class="btn btn-primary bg-curent-green">Create Device</button>
 </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      let typeField = document.querySelector("#id_type");
+      let kasaOptions = document.querySelector("#kasa-options");
+  
+      function toggleKasaOptions() {
+          if (typeField.value === "kasa_switch") {
+              kasaOptions.style.display = "block";
+          } else {
+              kasaOptions.style.display = "none";
+          }
+      }
+  
+      // Run on page load (if editing an existing device)
+      toggleKasaOptions();
+  
+      // Listen for changes
+      typeField.addEventListener("change", toggleKasaOptions);
+  });
+</script>
 
 {% endblock %}

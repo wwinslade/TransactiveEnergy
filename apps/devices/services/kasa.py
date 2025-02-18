@@ -21,17 +21,17 @@ class KasaSwitchAPI(AsyncDevice):
     self.ipv4 = ipv4
 
   async def on(self):
-    self._switch = SmartPlug(self._ipv4)
+    self._switch = SmartPlug(self.ipv4)
     await self._switch.turn_on()
     
     self._status = True
-    print(f"DEBUG: Switch {self.name} @ {self._ipv4} successfully turned on")
+    print(f"DEBUG: Switch @ {self.ipv4} successfully turned on")
 
   async def off(self):
-    self._switch = SmartPlug(self._ipv4)
+    self._switch = SmartPlug(self.ipv4)
     await self._switch.turn_off()
 
     self._status = False
-    print(f"DEBUG: Switch {self.name} @ {self._ipv4} successfully turned off")
+    print(f"DEBUG: Switch @ {self.ipv4} successfully turned off")
 
   

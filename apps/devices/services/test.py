@@ -1,15 +1,17 @@
-from .kasa_switch import KasaSwitch
-from .fridge import Fridge
+from .kasa import KasaSwitchAPI
+from .fridge import FridgeAPI
 import asyncio
 from time import sleep
 
 from .ubibot import UbibotSensor
 from config import UBIBOT_API_KEY, UBIBOT_CHANNEL
 
-# async def main():
-#   sw = KasaSwitch("test1", "192.168.0.108")
-
-#   await sw.off()
+async def main():
+  sw = KasaSwitchAPI("192.168.0.108")
+  await asyncio.sleep(5)
+  await sw.on()
+  await asyncio.sleep(5)
+  await sw.off()
 
 # def main():
 #   fridge = Fridge("Fridge")
@@ -18,16 +20,15 @@ from config import UBIBOT_API_KEY, UBIBOT_CHANNEL
 #   sleep(5)
 #   fridge.off()
 
-def getTempSensor():
-  fridge = Fridge("Fridge")
-  sleep(5)
-  fridge.on()
-  sleep(30)
-  fridge.off()
+# def getTempSensor():
+#   fridge = Fridge("Fridge")
+#   fridge.on()
+#   sleep(60)
+#   fridge.off()
 
 if __name__ == '__main__':
-  # asyncio.run(main())
+  asyncio.run(main())
   # main()
-  getTempSensor()
+  # getTempSensor()
 
 

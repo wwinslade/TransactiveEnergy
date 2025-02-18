@@ -16,6 +16,7 @@
           <th>Device Name</th>
           <th>Device Type</th>
           <th>Device Status</th>
+          <th>IPv4</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -25,6 +26,7 @@
           <td>{{ device.name }}</td>
           <td>{{ device.type }}</td>
           <td>{{ device.status }}</td>
+          <td>{{ device.kasa_ipv4 }}</td>
           <td>
             <a href="#" class="btn btn-success bg-curent-green {% if device.type == 'generic' %}disabled{% endif %}">On</a>
             <a href="#" class="btn btn-success bg-curent-green {% if device.type == 'generic' %}disabled{% endif %}">Off</a>
