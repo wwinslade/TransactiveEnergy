@@ -2,9 +2,9 @@
 {% block title %}Webcam Feed{% endblock %}
 {% block content %}
 <div class="container py-4">
-  <h1 class="tomorrow-medium">Live Webcam Stream</h1>
+  <h1 class="tomorrow-medium text-center">Live Webcam Stream</h1>
   <div class="embed-responsive embed-responsive-16by9">
-    <img src="{% url 'webcam_feed' %}" width="auto" height="auto" class="border rounded shadow">
+    <img src="{% url 'webcam_feed' %}" width="auto" height="auto" class="mx-auto d-block embed-responsive-item" alt="Webcam Feed">
   </div>
 </div>
 
