@@ -10,12 +10,23 @@ from django.http import StreamingHttpResponse
 from django.db.models import OuterRef, Subquery, Value, CharField
 from django.db.models.functions import Coalesce
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
 # Create your views here.
 def home(request):
   return render(request, 'home.html')
 
 def dashboard(request):
   return render(request, 'dashboard.html')
+
+def notify_dashboard_update(new_state):
+  channel_layer = get_channel_layer()
+  
+  async_to_sync(channel_layer.group_send)('smarthome_updates', {
+    'type': 'smarthome_state_update',
+    'state': new_state
+  })
 
 @login_required()
 def admin(request):
