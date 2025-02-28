@@ -39,3 +39,12 @@ class Fridge(models.Model):
 
   def __str__(self):
     return f'{self.device.uuid}.{self.device.type}.{self.device.name}'
+  
+# Model for energy consumption storage
+class EnergyConsumption(models.Model):
+  label = models.CharField(max_length=100, default='Unspecified')
+  timestamp = models.DateTimeField(default=None)
+  energy_consumed = models.FloatField(default=0.0)
+
+  def __str__(self):
+    return f'{self.label}.{self.timestamp} -- {self.energy_consumed}watt'
