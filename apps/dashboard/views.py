@@ -7,13 +7,27 @@ from .forms import DeviceForm
 import cv2
 from django.http import StreamingHttpResponse
 
+from django.db.models import OuterRef, Subquery, Value, CharField
+from django.db.models.functions import Coalesce
+
 # Create your views here.
 def home(request):
   return render(request, 'home.html')
 
+def dashboard(request):
+  return render(request, 'dashboard.html')
+
 @login_required()
 def admin(request):
-  devices = Device.objects.all().order_by('-updated_at')
+  devices = Device.objects.all().annotate(
+    ipv4=Coalesce(
+        Subquery(
+            KasaSwitch.objects.filter(device=OuterRef('pk')).values('ip_address')[:1],
+            output_field=CharField()
+        ),
+        Value("N/A", output_field=CharField())
+    )
+  ).order_by('name')
   context = {'devices': devices}
   return render(request, 'admin.html', context)
 
