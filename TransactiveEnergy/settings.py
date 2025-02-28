@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-+&fgqfvjqyw%8-v_-^_pejhw0q3yptrdr!ek65+!1w!24d=(*@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['100.111.176.4', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['100.111.176.4', '192.168.0.110', 'localhost', '127.0.0.1']
 
 # Login Routes
 LOGIN_REDIRECT_URL = "/"  # Redirect users after login
@@ -35,15 +35,16 @@ LOGIN_URL = "/user/login/"  # Ensure login is required for authentication
 # Application definition
 
 INSTALLED_APPS = [
-    'apps.users',
-    'apps.dashboard',
-    'apps.devices',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
+    'apps.users',
+    'apps.dashboard',
+    'apps.devices',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'TransactiveEnergy.urls'
@@ -76,6 +78,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'TransactiveEnergy.wsgi.application'
 
+ASGI_APPLICATION = 'TransactiveEnergy.asgi.application'
+
+CHANNEL_LAYERS = {
+  'default': {
+    'BACKEND': 'channels.layers.InMemoryChannelLayer',
+  },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
