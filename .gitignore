@@ -4,7 +4,7 @@ PreviousWebapp/
 db.sqlite3
 
 # Django
-migrations/
+staticfiles/
 
 # Python
 */__pycache__
