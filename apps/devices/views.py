@@ -11,6 +11,8 @@ import requests
 from datetime import datetime
 from django.utils import timezone
 
+from django.http import JsonResponse
+
 # Create your views here.
 @login_required()
 def KasaSwitchOn(request, uuid):
@@ -88,40 +90,34 @@ def QueryIotaWatt(request):
   if response.status_code != 200:
     print(f'Error fetching data from IotaWatt: {response.status_code} @ {url}')
     return None
-
-  times = response.json().get('range', [])
-  times = [datetime.fromtimestamp(time) for time in times]
   
-  labels = response.json().get('labels', [])
   data = response.json().get('data', [])
 
-  print(f'IotaWatt Data fetched for {sample_interval} interval from {times[0]} to {times[-1]}')
-
   # Save the data to the EnergyConsumption model
+  times = []
+  system_load = []
+  fridge_load = []
+  recepticles_load = []
+
   for d in data:
-    timestamp = datetime.fromisoformat(d[0])
-    timestamp = timezone.make_aware(timestamp)
-    input_0 = d[1]
-    fridge = d[2]
-    recepticles = d[4]
+    time = d[0]
+    fridge = float(d[2])
+    recepticles = float(d[4])
 
-    # Create a new EnergyConsumption object
-    fridge_energy_consumption = EnergyConsumption(
-      label = 'fridge',
-      timestamp = timestamp,
-      energy_consumed = fridge
-    )
+    times.append(time)
+    system_load.append(fridge + recepticles)
+    fridge_load.append(fridge)
+    recepticles_load.append(recepticles)
 
-    recepticle_energy_consumption = EnergyConsumption(
-      label = 'recepticles',
-      timestamp=timestamp,
-      energy_consumed=recepticles
-    )
 
-    # Save the object to the database
-    fridge_energy_consumption.save()
-    recepticle_energy_consumption.save()
+  context = {
+    'times': times,
+    'system_load': system_load,
+    'fridge_load': fridge_load,
+    'recepticles_load': recepticles_load,
+  }
+
 
   print(f'Energy consumption data saved to DB for {sample_interval} interval from {times[0]} to {times[-1]}')
 
-  return HttpResponse('IotaWatt data fetched and saved successfully.')
+  return JsonResponse(context)

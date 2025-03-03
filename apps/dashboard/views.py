@@ -5,13 +5,15 @@ from apps.devices.models import Device, KasaSwitch, Fridge
 from .forms import DeviceForm
 
 import cv2
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, JsonResponse
 
 from django.db.models import OuterRef, Subquery, Value, CharField
 from django.db.models.functions import Coalesce
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+import requests
+import json
 
 # Create your views here.
 def home(request):
@@ -20,13 +22,45 @@ def home(request):
 def dashboard(request):
   return render(request, 'dashboard.html')
 
-def notify_dashboard_update(new_state):
-  channel_layer = get_channel_layer()
+def update_dashboard_state(request):
+  url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-5s&end=s&group=5s&format=json&header=yes'
+  response = requests.get(url)
+  if response.status_code != 200:
+    print('Error fetching data from IotaWatt')
+    return redirect('dashboard')
+
+  data = response.json().get('data', [])
+
+  if not data:
+    print('No data returned from IotaWatt')
+    return redirect('dashboard')
   
-  async_to_sync(channel_layer.group_send)('smarthome_updates', {
-    'type': 'smarthome_state_update',
-    'state': new_state
-  })
+  for d in data:
+    input_0 = float(d[1])
+    fridge = float(d[2])
+    battery = float(d[3])
+    recepticles = float(d[4])
+    break
+
+  battery = 10
+
+  if battery >= 0.5:
+    power_source = 'Battery'
+  else:
+    power_source = 'Grid'
+  
+  new_state = {
+    'system_current_power': fridge + recepticles,
+    'critical_load_current_power': recepticles,
+    'fridge_current_power': fridge,
+    'device_states': {},
+    'battery_current_power': 0,
+    'battery_charge': 100,
+    'battery_remaining_time': 3.1,
+    'power_source': power_source,
+  }
+
+  return JsonResponse(new_state)
 
 @login_required()
 def admin(request):
