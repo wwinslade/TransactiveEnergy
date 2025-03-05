@@ -122,7 +122,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         systemLoadChart.update();
       })
-      .catch(error => console.error('Error fetching dashboard update:', error));
+      .catch(error => {
+        console.error('Error fetching dashboard update:', error);
+      });
   }
 
   setInterval(fetchDashboardUpdate, 5000);

@@ -27,13 +27,13 @@ def update_dashboard_state(request):
   response = requests.get(url)
   if response.status_code != 200:
     print('Error fetching data from IotaWatt')
-    return redirect('dashboard')
+    return JsonResponse({'error': 'Error fetching data from IotaWatt'}, status=500)
 
   data = response.json().get('data', [])
 
   if not data:
     print('No data returned from IotaWatt')
-    return redirect('dashboard')
+    return JsonResponse({'error': 'Error fetching data from IotaWatt'}, status=500)
   
   for d in data:
     input_0 = float(d[1])
@@ -42,9 +42,7 @@ def update_dashboard_state(request):
     recepticles = float(d[4])
     break
 
-  battery = 10
-
-  if battery >= 0.5:
+  if battery >= 1.0:
     power_source = 'Battery'
   else:
     power_source = 'Grid'
@@ -54,7 +52,7 @@ def update_dashboard_state(request):
     'critical_load_current_power': recepticles,
     'fridge_current_power': fridge,
     'device_states': {},
-    'battery_current_power': 0,
+    'battery_current_power': battery,
     'battery_charge': 100,
     'battery_remaining_time': 3.1,
     'power_source': power_source,
