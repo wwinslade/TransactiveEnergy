@@ -4,7 +4,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 {% block content %}
-<div class="row mt-3">
+<div class="row my-3">
   <div class="col-md-6">
     <div class="card">
       <div class="card-header">
@@ -51,38 +51,79 @@
       </div>
     </div>
   </div>
-  <div class="row mt-3">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h2 class="tomorrow-medium">System Load</h2>
-        </div>
-        <div class="card-body">
-          <canvas id="live-load-chart"></canvas>
-        </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="tomorrow-medium">System Load</h2>
+      </div>
+      <div class="card-body">
+        <canvas id="live-load-chart"></canvas>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h2 class="tomorrow-medium">Weekly Load</h2>
-        </div>
-        <div class="card-body">
-          <canvas id="weekly-load-chart"></canvas>
-        </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="tomorrow-medium">Weekly Load</h2>
+      </div>
+      <div class="card-body">
+        <canvas id="weekly-load-chart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 my-3">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="tomorrow-medium">Price Data</h2>
+      </div>
+      <div class="card-body">
+        <canvas id="weekly-price-chart"></canvas>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-console.log("Context received from Django view:", JSON.parse('{{ weeklyLoadLabels|safe }}') );
 document.addEventListener("DOMContentLoaded", function() {
+  const weeklyPriceLabels = JSON.parse('{{ weeklyPriceLabels|safe }}');
+  const weeklyPriceData = JSON.parse('{{ weeklyPriceData|safe }}');
+
+  const weekly_price_ctx = document.getElementById('weekly-price-chart').getContext('2d');
+  const weeklyPriceChart = new Chart(weekly_price_ctx, {
+    type: 'bar',
+    data: {
+      labels: weeklyPriceLabels,
+      datasets: [{
+        label: 'Cost per kWh (cents USD)',
+        data: weeklyPriceData,
+        fill: true,
+        backgroundColor: 'rgb(0, 120, 0)',
+        borderColor: 'rgb(0, 120, 0)',
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        },
+
+        x: {
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 7
+          }
+        }
+      }
+    }
+
+  })
+
   const weeklyLoadLabels = JSON.parse('{{ weeklyLoadLabels|safe }}');
   const weeklyLoadData = JSON.parse('{{ weeklyLoadData|safe }}');
 
-  const weekly_ctx = document.getElementById('weekly-load-chart').getContext('2d');
-  const weeklyLoadChart = new Chart(weekly_ctx, {
+  const weekly_load_ctx = document.getElementById('weekly-load-chart').getContext('2d');
+  const weeklyLoadChart = new Chart(weekly_load_ctx, {
     type: 'line',
     data: {
       labels: weeklyLoadLabels,
