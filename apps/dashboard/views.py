@@ -14,13 +14,51 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 import requests
 import json
+import datetime
 
 # Create your views here.
 def home(request):
   return render(request, 'home.html')
 
 def dashboard(request):
-  return render(request, 'dashboard.html')
+  weekly_load_url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-7d&end=s&group=15m&format=json&header=yes'
+  response = requests.get(weekly_load_url)
+  if response.status_code != 200:
+    print('Error fetching weekly data from IotaWatt')
+    return JsonResponse({'error': 'Error fetching weekly data from IotaWatt'}, status=500)
+  
+  weekly_data = response.json().get('data', [])
+
+  if not weekly_data:
+    print('No weekly data returned from IotaWatt')
+    return JsonResponse({'error': 'Error fetching weekly data from IotaWatt'}, status=500)
+
+  system_weekly_load = []
+  weekly_load_labels = []
+
+  for wd in weekly_data:
+    date_obj = datetime.datetime.fromisoformat(wd[0])
+    weekly_load_labels.append(date_obj.strftime('%d %b %Y'))
+
+    try:
+      fridge = float(wd[2])
+    except (ValueError, TypeError):
+      fridge = 0.0
+    
+    try:
+      recepticles = float(wd[4])
+    except (ValueError, TypeError):
+      recepticles = 0.0
+
+    system_weekly_load.append(fridge + recepticles)
+  
+  context = {
+    'weeklyLoadLabels': json.dumps(weekly_load_labels),
+    'weeklyLoadData': json.dumps(system_weekly_load),
+  }
+
+
+  return render(request, 'dashboard.html', context)
 
 def update_dashboard_state(request):
   url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-5s&end=s&group=5s&format=json&header=yes'
@@ -36,10 +74,21 @@ def update_dashboard_state(request):
     return JsonResponse({'error': 'Error fetching data from IotaWatt'}, status=500)
   
   for d in data:
-    input_0 = float(d[1])
-    fridge = float(d[2])
-    battery = float(d[3])
-    recepticles = float(d[4])
+    try:
+      fridge = float(d[2])
+    except (ValueError, TypeError):
+      fridge = 0.0
+    
+    try:
+      battery = float(d[3])
+    except (ValueError, TypeError):
+      battery = 0.0
+    
+    try: 
+      recepticles = float(d[4])
+    except (ValueError, TypeError):
+      recepticles = 0.0
+
     break
 
   if battery >= 1.0:
