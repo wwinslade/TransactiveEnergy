@@ -106,11 +106,22 @@ def dashboard(request):
       recepticles = 0.0
 
     system_weekly_load.append(fridge + recepticles)
+  
+  weekly_price_labels = []
+  weekly_price_data = []
+
+  comed_price_objects = ComedPriceData.objects.all()
+
+  for cpo in comed_price_objects:
+    weekly_price_labels.append(cpo.timestamp)
+    weekly_price_data.append(cpo.price)
+
   context = {
     'weeklyLoadLabels': json.dumps(weekly_load_labels),
     'weeklyLoadData': json.dumps(system_weekly_load),
+    'weeklyPriceLabels': json.dumps(weekly_price_labels),
+    'weeklyPriceData': json.dumps(weekly_price_data)
   }
-
 
   return render(request, 'dashboard.html', context)
 
