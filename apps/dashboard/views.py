@@ -14,11 +14,66 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 import requests
 import json
-import datetime
+from datetime import datetime, timedelta, timezone
+
+from .models import ComedPriceData
 
 # Create your views here.
 def home(request):
   return render(request, 'home.html')
+
+def fetch_comed_data(previous_days):
+
+  # Create datetime objects for window start and end
+  end_date_obj = datetime.now(timezone.utc)
+  begin_date_obj = datetime.now(timezone.utc) - timedelta(days=previous_days)
+
+  # See if most recent entry is older than end of needed window
+  query_end_date = end_date_obj.strftime('%Y%m%d%H%M')
+
+  latest_entry = ComedPriceData.objects.latest('timestamp')
+
+  if latest_entry.timestamp > begin_date_obj:
+    query_begin_date = latest_entry.timestamp.strftime('%Y%m%d%H%M')
+  else:
+    query_begin_date = begin_date_obj.strftime('%Y%m%d%H%M')
+
+  print(f'Querying comed from {query_begin_date} to {query_end_date}')
+
+  url = f'https://hourlypricing.comed.com/api?type=5minutefeed&datestart={query_begin_date}&dateend={query_end_date}'
+  response = requests.get(url)
+  if response.status_code != 200:
+    print('Unable to get pricing data from ComEd')
+    return
+  
+  data = response.json()
+  n_saved = 0
+  for d in data:
+    try:
+      timestamp = datetime.fromtimestamp(int(d['millisUTC']) / 1000, timezone.utc)
+    except (ValueError, TypeError):
+      raise RuntimeError('Could not convert timestamp from comed')
+    try:
+      price = float(d['price'])
+    except (ValueError, TypeError):
+      price = -1.0
+
+    new_db_obj = ComedPriceData(
+      timestamp = timestamp,
+      price = price
+    )
+
+    new_db_obj.save()
+    n_saved += 1
+  
+  print(f'Saved {n_saved} new price data objects to DB')
+
+  # Delete all entries with timestamp less than beginning of window
+  num_deleted, _ = ComedPriceData.objects.filter(
+    timestamp__lt=begin_date_obj
+  ).delete()
+
+  print(f'Deleted {num_deleted} ComedPriceData objects older than {begin_date_obj}')
 
 def dashboard(request):
   weekly_load_url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-7d&end=s&group=15m&format=json&header=yes'
@@ -51,7 +106,6 @@ def dashboard(request):
       recepticles = 0.0
 
     system_weekly_load.append(fridge + recepticles)
-  
   context = {
     'weeklyLoadLabels': json.dumps(weekly_load_labels),
     'weeklyLoadData': json.dumps(system_weekly_load),
@@ -108,9 +162,6 @@ def update_dashboard_state(request):
   }
 
   return JsonResponse(new_state)
-
-def fetch_pricing_data(request):
-  return JsonResponse({'error': 'Not implemented'}, status=500)
 
 @login_required()
 def admin(request):
