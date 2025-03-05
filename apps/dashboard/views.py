@@ -92,7 +92,7 @@ def dashboard(request):
   weekly_load_labels = []
 
   for wd in weekly_data:
-    date_obj = datetime.datetime.fromisoformat(wd[0])
+    date_obj = datetime.fromisoformat(wd[0])
     weekly_load_labels.append(date_obj.strftime('%d %b %Y'))
 
     try:
@@ -110,10 +110,12 @@ def dashboard(request):
   weekly_price_labels = []
   weekly_price_data = []
 
-  comed_price_objects = ComedPriceData.objects.all()
+  comed_price_objects = ComedPriceData.objects.filter(
+    timestamp__gt=datetime.now(timezone.utc) - timedelta(days=3)
+  )
 
   for cpo in comed_price_objects:
-    weekly_price_labels.append(cpo.timestamp)
+    weekly_price_labels.append(cpo.timestamp.strftime('%d %b %y - %H:%S'))
     weekly_price_data.append(cpo.price)
 
   context = {
