@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}Dashboard | {% endblock %}
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
@@ -57,7 +58,17 @@
           <h2 class="tomorrow-medium">System Load</h2>
         </div>
         <div class="card-body">
-          <canvas id="system-load-chart"></canvas>
+          <canvas id="live-load-chart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="tomorrow-medium">Weekly Load</h2>
+        </div>
+        <div class="card-body">
+          <canvas id="weekly-load-chart"></canvas>
         </div>
       </div>
     </div>
@@ -65,19 +76,53 @@
 </div>
 
 <script>
+console.log("Context received from Django view:", JSON.parse('{{ weeklyLoadLabels|safe }}') );
 document.addEventListener("DOMContentLoaded", function() {
-  let systemLoadData = [];
-  let labels = [];
+  const weeklyLoadLabels = JSON.parse('{{ weeklyLoadLabels|safe }}');
+  const weeklyLoadData = JSON.parse('{{ weeklyLoadData|safe }}');
 
-  const ctx = document.getElementById('system-load-chart').getContext('2d');
-  const systemLoadChart = new Chart(ctx, {
+  const weekly_ctx = document.getElementById('weekly-load-chart').getContext('2d');
+  const weeklyLoadChart = new Chart(weekly_ctx, {
     type: 'line',
     data: {
-      labels: labels,
+      labels: weeklyLoadLabels,
       datasets: [{
         label: 'System Load (W)',
-        data: systemLoadData,
-        borderColor: 'rgb(75, 192, 192)',
+        data: weeklyLoadData,
+        backgroundColor: 'rgb(0, 120, 0)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: false
+        },
+
+        x: {
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 7
+          }
+        }
+
+      }
+    }
+  });
+
+
+  let liveLoadData = [];
+  let liveLabels = [];
+
+  const live_ctx = document.getElementById('live-load-chart').getContext('2d');
+  const systemLoadChart = new Chart(live_ctx, {
+    type: 'line',
+    data: {
+      labels: liveLabels,
+      datasets: [{
+        label: 'System Load (W)',
+        data: liveLoadData,
+        borderColor: 'rgb(0, 120, 0)',
         borderWidth: 2,
         tension: 0.3
       }]
@@ -86,6 +131,13 @@ document.addEventListener("DOMContentLoaded", function() {
       scales: {
         y: {
           beginAtZero: true
+        },
+
+        x: {
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 10
+          }
         }
       }
     }
@@ -113,11 +165,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Get current time as label
         let currentTime = new Date().toLocaleTimeString();
-        labels.push(currentTime);
-        systemLoadData.push(data.system_current_power);
-        if (labels.length > 20) {
-          labels.shift();
-          systemLoadData.shift();
+        liveLabels.push(currentTime);
+        liveLoadData.push(data.system_current_power);
+        if (liveLabels.length > 20) {
+          liveLabels.shift();
+          liveLoadData.shift();
         }
 
         systemLoadChart.update();
