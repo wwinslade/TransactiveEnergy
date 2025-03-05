@@ -60,6 +60,9 @@ def update_dashboard_state(request):
 
   return JsonResponse(new_state)
 
+def fetch_pricing_data(request):
+  return JsonResponse({'error': 'Not implemented'}, status=500)
+
 @login_required()
 def admin(request):
   devices = Device.objects.all().annotate(
