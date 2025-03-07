@@ -5,7 +5,7 @@
         <img src='https://brand.utk.edu/wp-content/themes/ut-thehill/images/interface/logo-left.svg' height='100px' />
       </td>
       <td>
-        <img src='static/CURENT_Logo_Banner.png' height='150px' />
+        <img src='static/CURENT_Logo_Banner.png' height='150px' width='auto' />
       </td>
     </tr>  
   </table>
