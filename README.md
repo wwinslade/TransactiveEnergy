@@ -2,10 +2,10 @@
   <table cellspacing='0' cellpadding='0'>
     <tr>
       <td>
-        <img src='https://brand.utk.edu/wp-content/themes/ut-thehill/images/interface/logo-left.svg' height='100px' />
+        <img src='https://brand.utk.edu/wp-content/themes/ut-thehill/images/interface/logo-left.svg' height='auto' width='300px' />
       </td>
       <td>
-        <img src='static/CURENT_Logo_Banner.png' height='150px' width='auto' />
+        <img src='static/CURENT_Logo_Banner.png' height='auto' width='300px' />
       </td>
     </tr>  
   </table>
