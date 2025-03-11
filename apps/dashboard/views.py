@@ -16,9 +16,10 @@ import requests
 import json
 from datetime import datetime, timedelta, timezone
 
-from .models import ComedPriceData
+from .models import ComedPriceData, UbibotSensorTemp
 
 import os
+import dotenv
 
 
 # Create your views here.
@@ -96,6 +97,8 @@ def get_temp():
     None: Stores temp value in db.sqlite
   '''
 
+  dotenv.load_dotenv()
+
   # Get secrets from env vars
   api_key = os.getenv('UBIBOT_API_KEY')
   api_channel = os.getenv('UBIBOT_CHANNEL')
@@ -111,6 +114,12 @@ def get_temp():
   temp = data['channel']['last_values']['field1']['value']
 
   print(f'Fetched temp value of {temp} from UbiBot API')
+
+  new_temp_obj = UbibotSensorTemp(
+    temp = temp
+  )
+
+  new_temp_obj.save()
   
 
 def dashboard(request):
