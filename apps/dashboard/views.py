@@ -18,11 +18,23 @@ from datetime import datetime, timedelta, timezone
 
 from .models import ComedPriceData
 
+import os
+
+
 # Create your views here.
 def home(request):
   return render(request, 'home.html')
 
 def fetch_comed_data(previous_days):
+  ''' Fetch previous_days worth of 5-minute pricing data from ComEd (from now to now - previous_days). 
+  Store the data in the db.sqlite db, delete any data older than now - current_days.
+
+  Args:
+    previous_days (int): number of previous days from now to get data for
+  
+  Returns:
+    None: Performs query and stores data in DB  
+  '''
 
   # Create datetime objects for window start and end
   end_date_obj = datetime.now(timezone.utc)
@@ -74,6 +86,32 @@ def fetch_comed_data(previous_days):
   ).delete()
 
   print(f'Deleted {num_deleted} ComedPriceData objects older than {begin_date_obj}')
+
+def get_temp():
+  ''' Get temperature reading from UbiBot sensor in the fridge
+
+  Args:
+    None
+  Returns:
+    None: Stores temp value in db.sqlite
+  '''
+
+  # Get secrets from env vars
+  api_key = os.getenv('UBIBOT_API_KEY')
+  api_channel = os.getenv('UBIBOT_CHANNEL')
+
+  url = f'https://api.ubibot.com/channels/{api_channel}?account_key={api_key}'
+  response = requests.get(url)
+
+  if response != 200:
+    print('Error fetching temperature from Ubibot API')
+    return
+  
+  data = response.json()
+  temp = data['channel']['last_values']['field1']['value']
+
+  print(f'Fetched temp value of {temp} from UbiBot API')
+  
 
 def dashboard(request):
   weekly_load_url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-7d&end=s&group=15m&format=json&header=yes'
