@@ -120,6 +120,8 @@ def get_temp():
   )
 
   new_temp_obj.save()
+
+  return temp
   
 
 def dashboard(request):
@@ -210,10 +212,13 @@ def update_dashboard_state(request):
   else:
     power_source = 'Grid'
   
+  fridge_temp = get_temp()
+
   new_state = {
     'system_current_power': fridge + recepticles,
     'critical_load_current_power': recepticles,
     'fridge_current_power': fridge,
+    'fridge_current_temp': fridge_temp,
     'device_states': {},
     'battery_current_power': battery,
     'battery_charge': 100,
