@@ -8,14 +8,14 @@ class DeviceForm(ModelForm):
   
   class Meta:
     model = Device
-    fields = ['name', 'description', 'type', 'status', 'critical_load']
+    fields = ['name', 'description', 'type', 'status', 'critical_load', 'adr_enabled']
 
 class DeviceUpdateForm(forms.ModelForm):
   kasa_ipv4 = forms.GenericIPAddressField(required=False, label="IPv4 Address")
 
   class Meta:
     model = Device
-    fields = ['name', 'type', 'description', 'status', 'critical_load']
+    fields = ['name', 'type', 'description', 'status', 'critical_load', 'adr_enabled', 'on_window_begin', 'on_window_end', 'off_window_begin', 'off_window_end']
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)

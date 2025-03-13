@@ -42,6 +42,31 @@
         <input type="text" name="kasa-ipv4" id="id_ipv4" value="{{ ipv4_address|default:'' }}">
       </div>
 
+      <hr>
+      <div class="mb-3">
+        <h4>ADR Parameters</h4>
+      </div>
+      <div class="mb-3">
+        <label for="adr_enabled" class="form-label">Enable ADR</label>
+        {{ form.adr_enabled }}
+      </div>
+      <div class="mb-3">
+        <label for="on_window_begin" class="form-label">On-Window Beginning</label>
+        {{ form.on_window_begin }}
+      </div>
+      <div class="mb-3">
+        <label for="on_window_end" class="form-label">On-Window Ending</label>
+        {{ form.on_window_end }}
+      </div>
+      <div class="mb-3">
+        <label for="off_window_begin" class="form-label">Off-Window Beginning</label>
+        {{ form.off_window_begin }}
+      </div>
+      <div class="mb-3">
+        <label for="off_window_end" class="form-label">Off-Window Ending</label>
+        {{ form.off_window_end }}
+      </div>
+
       <button type="submit" class="btn btn-primary bg-curent-green">Save</button>
     </form>
   </div>
