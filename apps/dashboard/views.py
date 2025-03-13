@@ -46,6 +46,8 @@ def fetch_comed_data(previous_days):
 
   latest_entry = ComedPriceData.objects.latest('timestamp')
 
+  # TODO: Check if we need to query ComEd at all, don't query if its not necessary
+
   if latest_entry.timestamp > begin_date_obj:
     query_begin_date = latest_entry.timestamp.strftime('%Y%m%d%H%M')
   else:
@@ -159,6 +161,8 @@ def dashboard(request):
 
     system_weekly_load.append(fridge + recepticles)
   
+  fetch_comed_data(3)
+
   weekly_price_labels = []
   weekly_price_data = []
 
@@ -215,7 +219,8 @@ def update_dashboard_state(request):
   else:
     power_source = 'Grid'
   
-  fridge_temp = get_temp()
+  # fridge_temp = get_temp()
+  fridge_temp = -1.0
 
   new_state = {
     'system_current_power': fridge + recepticles,
