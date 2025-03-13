@@ -274,6 +274,7 @@ def CreateNewDevice(request):
 def UpdateDevice(request, uuid):
   device = Device.objects.get(uuid=uuid)
   form = DeviceUpdateForm(instance=device)
+  ipv4_address = None
 
   if device.type == 'kasa_switch':
     kasa_switch = KasaSwitch.objects.filter(device=device).first()
@@ -293,7 +294,7 @@ def UpdateDevice(request, uuid):
           KasaSwitch.objects.create(device=device, ip_address=new_ip)
 
       return redirect('admin')
-    
+     
   context = {'form': form, 'ipv4_address': ipv4_address}
   return render(request, 'update_device.html', context)
 
