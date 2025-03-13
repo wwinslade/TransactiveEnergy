@@ -20,6 +20,8 @@ class Device(models.Model):
   updated_at = models.DateTimeField(auto_now=True)
 
   # Fields to be used for ADR
+  adr_enabled = models.BooleanField(default=False)
+
   on_window_begin = models.TimeField(null=True, blank=True)
   on_window_end = models.TimeField(null=True, blank=True)
   off_window_begin = models.TimeField(null=True, blank=True)
