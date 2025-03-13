@@ -32,6 +32,11 @@
         {{ form.status }}
       </div>
 
+      <div class="mb-3">
+        <label for="critical_load" class="form-label">Is this device a critical load?</label>
+        {{ form.critical_load }}
+      </div>
+
       <div class="mb-3" id="kasa-ipv4-field" style="display: none">
         <label for="kasa-ipv4" class="form-label">Kasa IPv4</label>
         <input type="text" name="kasa-ipv4" id="id_ipv4" value="{{ ipv4_address|default:'' }}">
