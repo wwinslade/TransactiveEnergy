@@ -254,9 +254,11 @@ def CreateNewDevice(request):
     if form.is_valid():
       device = form.save()
       if device.type == 'kasa_switch':
-        ip_address = request.POST.get('kasa-ipv4', '').strip()
+        ip_address = request.POST.get('kasa_ipv4', '').strip()
         if ip_address:
           KasaSwitch.objects.create(device=device, ip_address=ip_address)
+        else:
+          KasaSwitch.objects.create(device=device, ip_address='0.0.0.0')
       
       return redirect('admin')
     
@@ -264,8 +266,8 @@ def CreateNewDevice(request):
   return render(request, 'new_device.html', context)
 
 @login_required()
-def UpdateDevice(request, pk):
-  device = Device.objects.get(uuid=pk)
+def UpdateDevice(request, uuid):
+  device = Device.objects.get(uuid=uuid)
   form = DeviceUpdateForm(instance=device)
 
   if device.type == 'kasa_switch':
@@ -289,6 +291,21 @@ def UpdateDevice(request, pk):
     
   context = {'form': form, 'ipv4_address': ipv4_address}
   return render(request, 'update_device.html', context)
+
+@login_required
+def DeleteDevice(request, uuid):
+  device = Device.objects.get(uuid=uuid)
+  context = {'device_name': device.name, 'device_id': uuid}
+
+  if request.method == 'POST':
+    if device.type == 'kasa_switch':
+      kasa_switch = KasaSwitch.objects.filter(device=device).first()
+      kasa_switch.delete()
+    
+    device.delete()
+    return redirect('admin')
+  
+  return render(request, 'delete_device.html', context)
 
 camera = None
 for i in range(1):

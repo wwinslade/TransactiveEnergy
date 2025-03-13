@@ -26,16 +26,16 @@
           {% if device.type == 'kasa_switch' %}
             <a href="{% url 'kasa_switch_on' device.uuid %}" class="btn btn-success bg-curent-green">On</a>
             <a href="{% url 'kasa_switch_off' device.uuid %}" class="btn btn-success bg-curent-green">Off</a>
-            <a href="{% url 'update_device' device.uuid %}" class="btn btn-primary bg-curent-green">Edit</a>
           {% elif device.type == 'fridge' %}
             <a href="{% url 'fridge_on' device.uuid %}" class="btn btn-success bg-curent-green">On</a>
             <a href="{% url 'fridge_off' device.uuid %}" class="btn btn-success bg-curent-green">Off</a>
-            <a href="{% url 'update_device' device.uuid %}" class="btn btn-primary bg-curent-green">Edit</a>
+            
           {% else %}
             <a href="#" class="btn btn-success bg-curent-green disabled">On</a>
             <a href="#" class="btn btn-success bg-curent-green disabled">Off</a>
-            <a href="#" class="btn btn-primary bg-curent-green">Edit</a>
           {% endif %}
+            <a href="{% url 'update_device' device.uuid %}" class="btn btn-success bg-curent-green">Edit</a>
+            <a href="{% url 'delete_device' device.uuid %}" class="btn btn-danger">Delete</a>
           </td>
         </tr>
         {% endfor %}
