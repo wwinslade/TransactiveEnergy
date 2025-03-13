@@ -36,6 +36,7 @@ class Fridge(models.Model):
   high_temp_threshold = models.FloatField(default=50.0)
   low_temp_threshold = models.FloatField(default=20.0)
   target_temp_threshold = models.FloatField(default=38.0)
+  
 
   def __str__(self):
     return f'{self.device.uuid}.{self.device.type}.{self.device.name}'

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from apps.devices.models import Device, KasaSwitch, Fridge
-from .forms import DeviceForm
+from .forms import DeviceForm, DeviceUpdateForm
 
 import cv2
 from django.http import StreamingHttpResponse, JsonResponse
@@ -103,7 +103,7 @@ def get_temp():
   api_key = os.getenv('UBIBOT_API_KEY')
   api_channel = os.getenv('UBIBOT_CHANNEL')
 
-  url = f'https://api.ubibot.com/channels/{api_channel}?account_key={api_key}'
+  url = f'https://api.ubibot.com/channels/42895?account_key=54183910b6a04fd59648e022d58a1229'
   response = requests.get(url)
 
   if response != 200:
@@ -111,7 +111,10 @@ def get_temp():
     return
   
   data = response.json()
+
+  # Get temp from JSON. Temp value is in celcius
   temp = data['channel']['last_values']['field1']['value']
+  temp = (temp * 9/5) + 32.0
 
   print(f'Fetched temp value of {temp} from UbiBot API')
 
@@ -249,8 +252,12 @@ def CreateNewDevice(request):
   if request.method == 'POST':
     form = DeviceForm(request.POST)
     if form.is_valid():
+      device = form.save()
+      if device.type == 'kasa_switch':
+        ip_address = request.POST.get('kasa-ipv4', '').strip()
+        if ip_address:
+          KasaSwitch.objects.create(device=device, ip_address=ip_address)
       
-      form.save()
       return redirect('admin')
     
   context = {'form': form}
@@ -259,15 +266,28 @@ def CreateNewDevice(request):
 @login_required()
 def UpdateDevice(request, pk):
   device = Device.objects.get(uuid=pk)
-  form = DeviceForm(instance=device)
+  form = DeviceUpdateForm(instance=device)
+
+  if device.type == 'kasa_switch':
+    kasa_switch = KasaSwitch.objects.filter(device=device).first()
+    if kasa_switch:
+      ipv4_address = kasa_switch.ip_address
 
   if request.method == 'POST':
-    form = DeviceForm(request.POST, instance=device)
+    form = DeviceUpdateForm(request.POST, instance=device)
     if form.is_valid():
       form.save()
+      if device.type == 'kasa_switch':
+        new_ip = request.POST.get('kasa-ipv4', '').strip()
+        if kasa_switch:
+          kasa_switch.ip_address = new_ip
+          kasa_switch.save()
+        else:
+          KasaSwitch.objects.create(device=device, ip_address=new_ip)
+
       return redirect('admin')
     
-  context = {'form': form}
+  context = {'form': form, 'ipv4_address': ipv4_address}
   return render(request, 'update_device.html', context)
 
 camera = None
