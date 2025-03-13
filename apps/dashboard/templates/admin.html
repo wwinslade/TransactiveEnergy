@@ -12,6 +12,7 @@
           <th>Device Type</th>
           <th>Device Status</th>
           <th>Crit Load</th>
+          <th>ADR</th>
           <th>IPv4</th>
           <th>Actions</th>
         </tr>
@@ -27,6 +28,11 @@
             <td><i class="fa-solid fa-circle text-red-500" style="color:red"></i></td>  <!-- Red cross icon -->
           {% endif %}
           {% if device.critical_load %}
+            <td><i class="fa-regular fa-circle-check" style="color:#007800"></i></td>
+          {% else %}
+            <td><i class="fa-regular fa-times-circle"></i></td>
+          {% endif %}
+          {% if device.adr_enabled %}
             <td><i class="fa-regular fa-circle-check" style="color:#007800"></i></td>
           {% else %}
             <td><i class="fa-regular fa-times-circle"></i></td>

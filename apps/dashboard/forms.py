@@ -16,6 +16,12 @@ class DeviceUpdateForm(forms.ModelForm):
   class Meta:
     model = Device
     fields = ['name', 'type', 'description', 'status', 'critical_load', 'adr_enabled', 'on_window_begin', 'on_window_end', 'off_window_begin', 'off_window_end']
+    widgets = {
+      'on_window_begin': forms.TimeInput(attrs={'type': 'time', 'class':'form-control'}),
+      'on_window_end': forms.TimeInput(attrs={'type': 'time', 'class':'form-control'}),
+      'off_window_begin': forms.TimeInput(attrs={'type': 'time', 'class':'form-control'}),
+      'off_window_end': forms.TimeInput(attrs={'type': 'time', 'class':'form-control'}), 
+    }
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
