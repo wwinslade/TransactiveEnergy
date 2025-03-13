@@ -19,6 +19,14 @@ class Device(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
+  # Fields to be used for ADR
+  on_window_begin = models.TimeField(null=True, blank=True)
+  on_window_end = models.TimeField(null=True, blank=True)
+  off_window_begin = models.TimeField(null=True, blank=True)
+  off_window_end = models.TimeField(null=True, blank=True)
+
+  critical_load = models.BooleanField(default=False)
+
   def __str__(self):
     return f'{self.uuid}.{self.type}.{self.name}'
 
@@ -36,6 +44,7 @@ class Fridge(models.Model):
   high_temp_threshold = models.FloatField(default=50.0)
   low_temp_threshold = models.FloatField(default=20.0)
   target_temp_threshold = models.FloatField(default=38.0)
+  
 
   def __str__(self):
     return f'{self.device.uuid}.{self.device.type}.{self.device.name}'

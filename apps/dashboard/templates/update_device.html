@@ -12,11 +12,59 @@
   <div class="col">
     <form method="POST" action="">
       {% csrf_token %}
-      {{ form.as_p }} 
+      <div class="mb-3">
+        <label for="name" class="form-label">Device Name</label>
+        {{ form.name }}
+      </div>
+
+      <div class="mb-3">
+        <label for="type" class="form-label">Device Type</label>
+        {{ form.type }}
+      </div>
+      
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        {{ form.description }}
+      </div>
+
+      <div class="mb-3">
+        <label for="status" class="form-label">Device Status</label>
+        {{ form.status }}
+      </div>
+
+      <div class="mb-3">
+        <label for="critical_load" class="form-label">Is this device a critical load?</label>
+        {{ form.critical_load }}
+      </div>
+
+      <div class="mb-3" id="kasa-ipv4-field" style="display: none">
+        <label for="kasa-ipv4" class="form-label">Kasa IPv4</label>
+        <input type="text" name="kasa-ipv4" id="id_ipv4" value="{{ ipv4_address|default:'' }}">
+      </div>
 
       <button type="submit" class="btn btn-primary bg-curent-green">Save</button>
     </form>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    let dropdown = document.querySelector("[name=type]");
+    let kasa_ipv4_field = document.getElementById("kasa-ipv4-field");
+
+    function toggleKasaIPField() {
+      if (dropdown.value === "kasa_switch") {
+        kasa_ipv4_field.style.display = "block";
+      } else {
+        kasa_ipv4_field.style.display = "none";
+      }
+    }
+
+    // Run on page load since we'll have a pre-selected field
+    toggleKasaIPField()
+
+    dropdown.addEventListener("change", toggleKasaIPField);
+  })
+</script>
 
 {% endblock %}

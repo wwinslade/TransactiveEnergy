@@ -20,6 +20,10 @@
             <h4>Power Source</h4>
             <p id="power-source">Grid</p>
           </div>
+          <div class="col-md-6">
+            <h4>Temp</h4>
+            <p id="fridge-temp">-1.0 F</p>
+          </div>
         </div>
       </div>
     </div>
@@ -192,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log(data);
 
         document.getElementById("system-load").innerText = data.system_current_power.toFixed(2) + " W";
+        document.getElementById("fridge-temp").innerText = data.fridge_current_temp.toFixed(2) + " F";
         document.getElementById("power-source").innerText = data.power_source;
         document.getElementById("battery-load").innerText = data.battery_current_power.toFixed(2) + " W";
         document.getElementById("battery-remaining-time").innerText = data.battery_remaining_time.toFixed(1) + " hours";

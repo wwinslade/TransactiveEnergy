@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from apps.devices.models import Device, KasaSwitch, Fridge
-from .forms import DeviceForm
+from .forms import DeviceForm, DeviceUpdateForm
 
 import cv2
 from django.http import StreamingHttpResponse, JsonResponse
@@ -16,13 +16,26 @@ import requests
 import json
 from datetime import datetime, timedelta, timezone
 
-from .models import ComedPriceData
+from .models import ComedPriceData, UbibotSensorTemp
+
+import os
+import dotenv
+
 
 # Create your views here.
 def home(request):
   return render(request, 'home.html')
 
 def fetch_comed_data(previous_days):
+  ''' Fetch previous_days worth of 5-minute pricing data from ComEd (from now to now - previous_days). 
+  Store the data in the db.sqlite db, delete any data older than now - current_days.
+
+  Args:
+    previous_days (int): number of previous days from now to get data for
+  
+  Returns:
+    None: Performs query and stores data in DB  
+  '''
 
   # Create datetime objects for window start and end
   end_date_obj = datetime.now(timezone.utc)
@@ -32,6 +45,8 @@ def fetch_comed_data(previous_days):
   query_end_date = end_date_obj.strftime('%Y%m%d%H%M')
 
   latest_entry = ComedPriceData.objects.latest('timestamp')
+
+  # TODO: Check if we need to query ComEd at all, don't query if its not necessary
 
   if latest_entry.timestamp > begin_date_obj:
     query_begin_date = latest_entry.timestamp.strftime('%Y%m%d%H%M')
@@ -75,6 +90,45 @@ def fetch_comed_data(previous_days):
 
   print(f'Deleted {num_deleted} ComedPriceData objects older than {begin_date_obj}')
 
+def get_temp():
+  ''' Get temperature reading from UbiBot sensor in the fridge
+
+  Args:
+    None
+  Returns:
+    None: Stores temp value in db.sqlite
+  '''
+
+  dotenv.load_dotenv()
+
+  # Get secrets from env vars
+  api_key = os.getenv('UBIBOT_API_KEY')
+  api_channel = os.getenv('UBIBOT_CHANNEL')
+
+  url = f'https://api.ubibot.com/channels/42895?account_key=54183910b6a04fd59648e022d58a1229'
+  response = requests.get(url)
+
+  if response != 200:
+    print('Error fetching temperature from Ubibot API')
+    return
+  
+  data = response.json()
+
+  # Get temp from JSON. Temp value is in celcius
+  temp = data['channel']['last_values']['field1']['value']
+  temp = (temp * 9/5) + 32.0
+
+  print(f'Fetched temp value of {temp} from UbiBot API')
+
+  new_temp_obj = UbibotSensorTemp(
+    temp = temp
+  )
+
+  new_temp_obj.save()
+
+  return temp
+  
+
 def dashboard(request):
   weekly_load_url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-7d&end=s&group=15m&format=json&header=yes'
   response = requests.get(weekly_load_url)
@@ -107,6 +161,8 @@ def dashboard(request):
 
     system_weekly_load.append(fridge + recepticles)
   
+  fetch_comed_data(3)
+
   weekly_price_labels = []
   weekly_price_data = []
 
@@ -163,10 +219,14 @@ def update_dashboard_state(request):
   else:
     power_source = 'Grid'
   
+  # fridge_temp = get_temp()
+  fridge_temp = -1.0
+
   new_state = {
     'system_current_power': fridge + recepticles,
     'critical_load_current_power': recepticles,
     'fridge_current_power': fridge,
+    'fridge_current_temp': fridge_temp,
     'device_states': {},
     'battery_current_power': battery,
     'battery_charge': 100,
@@ -197,26 +257,61 @@ def CreateNewDevice(request):
   if request.method == 'POST':
     form = DeviceForm(request.POST)
     if form.is_valid():
+      device = form.save()
+      if device.type == 'kasa_switch':
+        ip_address = request.POST.get('kasa_ipv4', '').strip()
+        if ip_address:
+          KasaSwitch.objects.create(device=device, ip_address=ip_address)
+        else:
+          KasaSwitch.objects.create(device=device, ip_address='0.0.0.0')
       
-      form.save()
       return redirect('admin')
     
   context = {'form': form}
   return render(request, 'new_device.html', context)
 
 @login_required()
-def UpdateDevice(request, pk):
-  device = Device.objects.get(uuid=pk)
-  form = DeviceForm(instance=device)
+def UpdateDevice(request, uuid):
+  device = Device.objects.get(uuid=uuid)
+  form = DeviceUpdateForm(instance=device)
+  ipv4_address = None
+
+  if device.type == 'kasa_switch':
+    kasa_switch = KasaSwitch.objects.filter(device=device).first()
+    if kasa_switch:
+      ipv4_address = kasa_switch.ip_address
 
   if request.method == 'POST':
-    form = DeviceForm(request.POST, instance=device)
+    form = DeviceUpdateForm(request.POST, instance=device)
     if form.is_valid():
       form.save()
+      if device.type == 'kasa_switch':
+        new_ip = request.POST.get('kasa-ipv4', '').strip()
+        if kasa_switch:
+          kasa_switch.ip_address = new_ip
+          kasa_switch.save()
+        else:
+          KasaSwitch.objects.create(device=device, ip_address=new_ip)
+
       return redirect('admin')
-    
-  context = {'form': form}
+     
+  context = {'form': form, 'ipv4_address': ipv4_address}
   return render(request, 'update_device.html', context)
+
+@login_required
+def DeleteDevice(request, uuid):
+  device = Device.objects.get(uuid=uuid)
+  context = {'device_name': device.name, 'device_id': uuid}
+
+  if request.method == 'POST':
+    if device.type == 'kasa_switch':
+      kasa_switch = KasaSwitch.objects.filter(device=device).first()
+      kasa_switch.delete()
+    
+    device.delete()
+    return redirect('admin')
+  
+  return render(request, 'delete_device.html', context)
 
 camera = None
 for i in range(1):
