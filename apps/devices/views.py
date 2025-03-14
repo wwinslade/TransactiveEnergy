@@ -13,17 +13,13 @@ from django.utils import timezone
 
 from django.http import JsonResponse
 
+from .tasks import CeleryKasaSwitchOn
+
 # Create your views here.
 @login_required()
 def KasaSwitchOn(request, uuid):
-  switch = KasaSwitch.objects.get(device__uuid=uuid)
-  switch_api = KasaSwitchAPI(switch.ip_address)
-  
-  # Note: This is a blocking call :(
-  asyncio.run(switch_api.on())
-
-  switch.device.status = True
-  switch.device.save()
+  task = CeleryKasaSwitchOn.delay(uuid)
+  print(f'CeleryKasaSwitchOn task started: {task.id}')
 
   return redirect('admin')
 
