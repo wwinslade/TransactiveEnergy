@@ -321,7 +321,7 @@ for i in range(1):
 
 if camera is None or not camera.isOpened():
   print('Error: Could not open camera.')
-  raise RuntimeError('Could not open camera.')
+  # raise RuntimeError('Could not open camera.')
 
 def generate_frames():
   while True:
