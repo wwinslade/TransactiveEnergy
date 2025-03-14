@@ -86,6 +86,13 @@ CHANNEL_LAYERS = {
   },
 }
 
+# Celery
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+
+# Cache Celery task results in Django cache
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
