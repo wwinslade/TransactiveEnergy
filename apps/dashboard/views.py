@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from apps.devices.models import Device, KasaSwitch, Fridge
+from apps.devices.views import estimate_remaining_time
 from .forms import DeviceForm, DeviceUpdateForm
 
 import cv2
@@ -21,6 +22,8 @@ from .models import ComedPriceData, UbibotSensorTemp
 import os
 import dotenv
 
+from django.utils.timezone import now
+from views import total_time_minutes
 
 # Create your views here.
 def home(request):
@@ -183,7 +186,11 @@ def dashboard(request):
 
   return render(request, 'dashboard.html', context)
 
+battery_percentage = 100
+last_update_time = now()
+
 def update_dashboard_state(request):
+  global battery_percentage, last_update_time
   url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-5s&end=s&group=5s&format=json&header=yes'
   response = requests.get(url)
   if response.status_code != 200:
@@ -213,14 +220,23 @@ def update_dashboard_state(request):
       recepticles = 0.0
 
     break
-  battery_percentage = max(0, min(100, int(battery)))  # Ensure range 0-100
-  remaining_time = estimate_remaining_time(battery_percentage)
-  
+
   if battery >= 1.0:
     power_source = 'Battery'
   else:
     power_source = 'Grid'
   
+  if power_source == 'Battery':
+    elapsed_time = (now() - last_update_time).total_seconds() / 60
+
+    for i in range(len(total_time_minutes) - 1):
+      if total_time_minutes[i] <=elapsed_time < total_time_minutes[i + 1]:
+        battery_percentage -= 5
+        last_update_time = now()
+        break
+  battery_percentage = max(0, battery_percentage)
+  estimated_time = estimate_remaining_time(battery_percentage)
+
   # fridge_temp = get_temp()
   fridge_temp = -1.0
 
@@ -231,8 +247,8 @@ def update_dashboard_state(request):
     'fridge_current_temp': fridge_temp,
     'device_states': {},
     'battery_current_power': battery,
-    'battery_charge': 100,
-    'battery_remaining_time': 3.1,
+    'battery_charge': battery_percentage,
+    'battery_remaining_time': f"{estimated_time // 60}h {estimated_time % 60}m",
     'power_source': power_source,
   }
 
