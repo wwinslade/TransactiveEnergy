@@ -213,7 +213,9 @@ def update_dashboard_state(request):
       recepticles = 0.0
 
     break
-
+  battery_percentage = max(0, min(100, int(battery)))  # Ensure range 0-100
+  remaining_time = estimate_remaining_time(battery_percentage)
+  
   if battery >= 1.0:
     power_source = 'Battery'
   else:
