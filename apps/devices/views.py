@@ -72,7 +72,7 @@ def FridgeOff(request, uuid):
 # Quadratic model coefficients
 battery_percentages = np.array([100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 
                                 45, 40, 35, 30, 25, 20, 15, 10, 5, 0])
-total_time_minutes = np.array([0, 11, 23, 36, 47, 55, 64, 74, 82, 91, 99, 
+total_time_minutes = np.array([0, 1, 23, 36, 47, 55, 64, 74, 82, 91, 99, 
                                107, 114, 120, 126, 132, 138, 155, 171, 181, 193])
 coeffs = np.polyfit(battery_percentages, total_time_minutes[::-1], 2)
 d, e, f = coeffs

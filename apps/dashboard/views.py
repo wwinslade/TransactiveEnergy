@@ -23,7 +23,7 @@ import os
 import dotenv
 
 from django.utils.timezone import now
-from views import total_time_minutes
+from devices.views import total_time_minutes
 
 # Create your views here.
 def home(request):
@@ -235,7 +235,7 @@ def update_dashboard_state(request):
         last_update_time = now()
         break
   battery_percentage = max(0, battery_percentage)
-  estimated_time = estimate_remaining_time(battery_percentage)
+  estimated_time = estimate_remaining_time(battery_percentage)/60.0
 
   # fridge_temp = get_temp()
   fridge_temp = -1.0
@@ -248,7 +248,7 @@ def update_dashboard_state(request):
     'device_states': {},
     'battery_current_power': battery,
     'battery_charge': battery_percentage,
-    'battery_remaining_time': f"{estimated_time // 60}h {estimated_time % 60}m",
+    'battery_remaining_time': estimated_time,
     'power_source': power_source,
   }
 
