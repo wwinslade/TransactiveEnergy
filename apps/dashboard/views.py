@@ -186,7 +186,6 @@ def dashboard(request):
 
   return render(request, 'dashboard.html', context)
 
-battery_percentage = 100
 last_update_time = now()
 
 def update_dashboard_state(request):
