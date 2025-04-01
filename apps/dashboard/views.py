@@ -226,14 +226,6 @@ def update_dashboard_state(request):
   else:
     power_source = 'Grid'
   
-  if power_source == 'Battery':
-    elapsed_time = (now() - last_update_time).total_seconds() / 60
-
-    for i in range(len(total_time_minutes) - 1):
-      if total_time_minutes[i] <=elapsed_time < total_time_minutes[i + 1]:
-        battery_percentage -= 5
-        last_update_time = now()
-        break
   battery_percentage = max(0, battery_percentage)
   estimated_time = estimate_remaining_time(battery_percentage)/60.0
 
