@@ -80,7 +80,7 @@ def fetch_comed_data(previous_days):
 
     new_db_obj.save()
     n_saved += 1
-  
+        
   print(f'Saved {n_saved} new price data objects to DB')
 
   # Delete all entries with timestamp less than beginning of window
@@ -321,7 +321,6 @@ for i in range(1):
 
 if camera is None or not camera.isOpened():
   print('Error: Could not open camera.')
-  raise RuntimeError('Could not open camera.')
 
 def generate_frames():
   while True:
