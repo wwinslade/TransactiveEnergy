@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from apps.devices.models import Device, KasaSwitch, Fridge
-from apps.devices.views import estimate_remaining_time
+from apps.dashboard.battery_management import estimate_remaining_time
 from .forms import DeviceForm, DeviceUpdateForm
 
 import cv2
@@ -23,7 +23,7 @@ import os
 import dotenv
 
 from django.utils.timezone import now
-from devices.views import total_time_minutes
+from .battery_management import total_time_minutes
 
 # Create your views here.
 def home(request):
