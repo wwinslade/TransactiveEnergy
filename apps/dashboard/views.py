@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from apps.devices.models import Device, KasaSwitch, Fridge
+from apps.dashboard.battery_management import estimate_remaining_time
 from .forms import DeviceForm, DeviceUpdateForm
 
 import cv2
@@ -21,6 +22,7 @@ from .models import ComedPriceData, UbibotSensorTemp
 import os
 import dotenv
 
+from .battery_management import update_battery
 
 # Create your views here.
 def home(request):
@@ -184,6 +186,9 @@ def dashboard(request):
   return render(request, 'dashboard.html', context)
 
 def update_dashboard_state(request):
+  battery_percentage = 100
+  estimated_time = 3.1
+
   url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-5s&end=s&group=5s&format=json&header=yes'
   response = requests.get(url)
   if response.status_code != 200:
@@ -216,11 +221,17 @@ def update_dashboard_state(request):
 
   if battery >= 1.0:
     power_source = 'Battery'
+    # # Start the battery drain sim
+    # if battery_time_start == None:
+    #   battery_time_start = datetime.now(timezone.utc)
+    # battery_percentage, estimated_time = update_battery(battery_time_start)
   else:
     power_source = 'Grid'
-  
+    # Restart battery time tracking
+    # battery_time_start = None
+
   # fridge_temp = get_temp()
-  fridge_temp = -1.0
+  fridge_temp = 47.75
 
   new_state = {
     'system_current_power': fridge + recepticles,
@@ -229,8 +240,8 @@ def update_dashboard_state(request):
     'fridge_current_temp': fridge_temp,
     'device_states': {},
     'battery_current_power': battery,
-    'battery_charge': 100,
-    'battery_remaining_time': 3.1,
+    'battery_charge': int(battery_percentage),
+    'battery_remaining_time': float(estimated_time),
     'power_source': power_source,
   }
 
@@ -284,7 +295,18 @@ def UpdateDevice(request, uuid):
   if request.method == 'POST':
     form = DeviceUpdateForm(request.POST, instance=device)
     if form.is_valid():
-      form.save()
+      modified_fields = []
+      
+      for field in form.changed_data:
+        if field in ['use_user_window', 'on_window_begin', 'on_window_end']:
+          modified_fields.append(field)
+      
+      if modified_fields:
+        form.save(commit=False)
+        device.save(update_fields=modified_fields)
+      else:
+        form.save()
+      
       if device.type == 'kasa_switch':
         new_ip = request.POST.get('kasa-ipv4', '').strip()
         if kasa_switch:
@@ -307,7 +329,7 @@ def DeleteDevice(request, uuid):
     if device.type == 'kasa_switch':
       kasa_switch = KasaSwitch.objects.filter(device=device).first()
       kasa_switch.delete()
-    
+
     device.delete()
     return redirect('admin')
   
@@ -337,6 +359,5 @@ def generate_frames():
 def WebcamStreamTest(request):
   return StreamingHttpResponse(generate_frames(), content_type='multipart/x-mixed-replace; boundary=frame')
 
-@login_required()
 def WebcamStreamTestPage(request):
   return render(request, 'stream_test.html')
