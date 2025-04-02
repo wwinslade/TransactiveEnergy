@@ -24,7 +24,7 @@ def KasaSwitchOn(request, uuid):
   asyncio.run(switch_api.on())
 
   switch.device.status = True
-  switch.device.save()
+  switch.device.save(update_fields=['status'])
 
   return redirect('admin')
 
@@ -37,7 +37,7 @@ def KasaSwitchOff(request, uuid):
   asyncio.run(switch_api.off())
 
   switch.device.status = False
-  switch.device.save()
+  switch.device.save(update_fields=['status'])
 
   return redirect('admin')
 
@@ -50,7 +50,7 @@ def FridgeOn(request, uuid):
   fridge_api.on()
 
   fridge.device.status = True
-  fridge.device.save()
+  fridge.device.save(update_fields=['status'])
 
   return redirect('admin')
 
@@ -63,6 +63,6 @@ def FridgeOff(request, uuid):
   fridge_api.off()
 
   fridge.device.status = False
-  fridge.device.save()
+  fridge.device.save(update_fields=['status'])
 
   return redirect('admin')

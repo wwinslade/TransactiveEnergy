@@ -1,11 +1,10 @@
 import numpy as np
-import threading
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Battery percentage levels and corresponding total time in minutes
 battery_percentages = np.array([100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 
                                 45, 40, 35, 30, 25, 20, 15, 10, 5, 0])
-total_time_minutes = np.array([0, 1, 23, 36, 47, 55, 64, 74, 82, 91, 99, 
+total_time_minutes = np.array([0, 11, 23, 36, 47, 55, 64, 74, 82, 91, 99, 
                                107, 114, 120, 126, 132, 138, 155, 171, 181, 193])
 
 # Quadratic model coefficients
@@ -21,18 +20,26 @@ index = 0  # Index for battery percentage updates
 remaining_time = estimate_remaining_time(battery_percentage)
 time_intervals = np.diff(total_time_minutes) * 60  # Convert to seconds
 
-def update_battery():
+def update_battery(battery_time_start):
     """Update battery percentage."""
     global battery_percentage, index, remaining_time
-    
-    if index < len(time_intervals):
+    now = datetime.now(timezone.utc)
+
+    # Calculate diff in minutes between now and battery start time, 
+    # then use delta to determine what index we should be at
+def get_index(now, time_intervals):
+    for i in range(len(time_intervals) - 1):
+        if time_intervals[i] <= now < time_intervals[i + 1]:
+            return i
+    return len(time_intervals) - 1 #Returns last index if needed
+
+#index = get_index(datetime.now(timezone.utc), time_intervals)
+
+
+if index < len(time_intervals):
         battery_percentage = battery_percentages[index]  # Update battery percentage
         remaining_time = estimate_remaining_time(battery_percentage)  # Update estimated time
         index += 1
         
-        # Schedule next update
-        threading.Timer(time_intervals[index-1], update_battery).start()
-        print(f"Battery updated: {battery_percentage}%, Estimated Time: {remaining_time // 60}h {remaining_time % 60}m")
-
-# Start the battery drain simulation
-update_battery()
+        print(f"Battery updated: {battery_percentage}%, Estimated Time: {remaining_time // 60}h {remaining_time % 60}m", f"Index: {index}")
+        #return battery_percentage, remaining_time / 60
