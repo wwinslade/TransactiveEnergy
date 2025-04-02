@@ -1,6 +1,9 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ThreadPoolExecutor
 
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+
 from datetime import datetime
 
 from .models import Device, KasaSwitch, Fridge
@@ -8,6 +11,11 @@ from apps.devices.services.kasa import KasaSwitchAPI
 from apps.devices.services.fridge import FridgeAPI
 
 import asyncio
+
+import os
+import threading
+
+import atexit
 
 executors = {
   'default': ThreadPoolExecutor(4),
@@ -33,6 +41,8 @@ def device_turn_on(uuid, type):
     fridge.device.save()
   else:
     print('Device on task failed: Unknown device type')
+  
+  print(f'DEBUG: ScheduledEventRan: Turned device {uuid} ON at {datetime.now()}')
 
 def device_turn_off(uuid, type):
   if type == 'kasa_switch':
@@ -53,31 +63,94 @@ def device_turn_off(uuid, type):
   else:
     print('Device off task failed: Unknown device type')
 
+  print(f'DEBUG: ScheduledEventRan: Turned device {uuid} OFF at {datetime.now()}')
+
+def reschedule_device(device):
+  on_job_id = f'device_{device.uuid}_{device.type}_ON_{device.on_window_begin.hour}_{device.on_window_begin.minute}'
+  off_job_id = f'device_{device.uuid}_{device.type}_OFF_{device.on_window_begin.hour}_{device.on_window_begin.minute}'
+
+  if scheduler.get_job(on_job_id):
+    scheduler.remove_job(on_job_id)
+    print(f'Removed job: {on_job_id}')
+
+  if scheduler.get_job(off_job_id):
+    scheduler.remove_job(off_job_id)
+    print(f'Removed job: {off_job_id}')
+
+  print(f'Added job: device_{device.uuid}_{device.type}_ON_{device.on_window_begin.hour}_{device.on_window_begin.minute}')
+  scheduler.add_job(
+    device_turn_on,
+    'cron',
+    hour = device.on_window_begin.hour + 4, # account for UTC time
+    minute = device.on_window_begin.minute,
+    args = [device.uuid, device.type],
+    id = f'device_{device.uuid}_{device.type}_ON_{device.on_window_begin.hour}_{device.on_window_begin.minute}'
+  )
+
+  print(f'Added job: device_{device.uuid}_{device.type}_ON_{device.on_window_end.hour}_{device.on_window_end.minute}')
+  scheduler.add_job(
+    device_turn_off,
+    'cron',
+    hour = device.on_window_end.hour + 4, # account for UTC time
+    minute = device.on_window_end.minute,
+    args = [device.uuid, device.type],
+    id = f'device_{device.uuid}_{device.type}_OFF_{device.on_window_end.hour}_{device.on_window_end.minute}'
+  )
+
+@receiver(post_save, sender=Device)  
+def update_jobs_on_save(sender, instance, **kwargs):
+  print(f'DEBUG: Updating scheduler jobs for device {instance.name}')
+  reschedule_device(instance)
+  print(f"DEBUG: Device {instance.name} scheduled on/off tasks updated")
+
+@receiver(post_delete, sender=Device)
+def remove_jobs_on_delete(sender, instance, **kwargs):
+  on_job_id = f'device_{instance.uuid}_{instance.type}_ON_{instance.on_window_begin.hour}_{instance.on_window_begin.minute}'
+  off_job_id = f'device_{instance.uuid}_{instance.type}_OFF_{instance.on_window_begin.hour}_{instance.on_window_begin.minute}'
+
+  if scheduler.get_job(on_job_id):
+    scheduler.remove_job(on_job_id)
+    print(f'Removed job: {on_job_id}')
+  
+  if scheduler.get_job(off_job_id):
+    scheduler.remove_job(off_job_id)
+    print(f'Removed job: {off_job_id}')
+  
+  print(f'DEBUG: ON/OFF jobs for device {instance.name} removed from scheduler')
+
 def start():
   if not scheduler.running:
+    print(f"Scheduler started in PID: {os.getpid()}, Thread: {threading.current_thread().name}")
+
     scheduler.start()
+    scheduler.remove_all_jobs()
 
     devices = Device.objects.filter(use_user_window=True)
     for d in devices:
-      data = {'device_uuid': d.uuid, 'device_type': d.type, 'on_window_begin': d.on_window_begin, 'on_window_end': d.on_window_end}
+      print(f'Added job: device_{d.uuid}_{d.type}_ON_{d.on_window_begin.hour}_{d.on_window_begin.minute}')
       scheduler.add_job(
         device_turn_on,
         'cron',
-        hour = d.on_window_begin.hour,
+        hour = d.on_window_begin.hour + 4, # account for UTC time
         minute = d.on_window_begin.minute,
         args = [d.uuid, d.type],
-        id = f'device_{d.uuid}_{d.type}_ON'
+        id = f'device_{d.uuid}_{d.type}_ON_{d.on_window_begin.hour}_{d.on_window_begin.minute}'
       )
 
+      print(f'Added job: device_{d.uuid}_{d.type}_OFF_{d.on_window_end.hour}_{d.on_window_end.minute}')
       scheduler.add_job(
         device_turn_off,
         'cron',
-        hour = d.on_window_end.hour,
+        hour = d.on_window_end.hour + 4, # account for UTC time
         minute = d.on_window_end.minute,
         args = [d.uuid, d.type],
-        id = f'device_{d.uuid}_{d.type}_ON'
+        id = f'device_{d.uuid}_{d.type}_OFF_{d.on_window_end.hour}_{d.on_window_begin.minute}'
       )
 
-    print('Scheduler started')
+    atexit.register(stop_scheduler)
+    print('Device ON/OFF event scheduler started')
 
-
+def stop_scheduler():
+  if scheduler.running:
+    print('Device ON/OFF event scheduler killed')
+    scheduler.shutdown()
