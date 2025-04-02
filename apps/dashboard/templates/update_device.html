@@ -51,6 +51,10 @@
         {{ form.adr_enabled }}
       </div>
       <div class="mb-3">
+        <label for="use_user_window" class="form-label">Use manually specified on windows?</label>
+        {{ form.use_user_window }}
+      </div>
+      <div class="mb-3">
         <label for="on_window_begin" class="form-label">On-Window Beginning</label>
         {{ form.on_window_begin }}
       </div>
@@ -58,11 +62,11 @@
         <label for="on_window_end" class="form-label">On-Window Ending</label>
         {{ form.on_window_end }}
       </div>
-      <div class="mb-3">
+      <div class="mb-3" style="display: none">
         <label for="off_window_begin" class="form-label">Off-Window Beginning</label>
         {{ form.off_window_begin }}
       </div>
-      <div class="mb-3">
+      <div class="mb-3" style="display: none">
         <label for="off_window_end" class="form-label">Off-Window Ending</label>
         {{ form.off_window_end }}
       </div>
