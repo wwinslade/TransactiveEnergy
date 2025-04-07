@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from apps.devices.models import Device, KasaSwitch, Fridge
-from apps.dashboard.battery_management import estimate_remaining_time, time_intervals, battery_percentages, remaining_time
+from apps.dashboard.battery_management import estimate_remaining_time, time_intervals, battery_percentages
 from .forms import DeviceForm, DeviceUpdateForm
 
 import cv2
@@ -21,7 +21,7 @@ from .models import ComedPriceData, UbibotSensorTemp
 import os
 import dotenv
 
-from .battery_management import get_index, update_battery
+from .battery_management import get_index
 
 # Create your views here.
 def home(request):
@@ -185,74 +185,74 @@ def dashboard(request):
   return render(request, 'dashboard.html', context)
 
 def update_dashboard_state(request):
-  # battery_percentage = 100
-  # estimated_time = 3.1
-  index = get_index(datetime.now(timezone.utc), time_intervals)
-  if index < len(time_intervals):
-        battery_percentage = battery_percentages[index]  # Update battery percentage
-        remaining_time = estimate_remaining_time(battery_percentage)  # Update estimated time
-        index += 1
-        
-        print(f"Battery updated: {battery_percentage}%, Estimated Time: {remaining_time // 60}h {remaining_time % 60}m", f"Index: {index}")
-        #return battery_percentage, remaining_time / 60
+    # Fetch current power usage
+    url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-5s&end=s&group=5s&format=json&header=yes'
+    response = requests.get(url)
+    if response.status_code != 200:
+        print('Error fetching data from IotaWatt')
+        return JsonResponse({'error': 'Error fetching data from IotaWatt'}, status=500)
 
-  url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-5s&end=s&group=5s&format=json&header=yes'
-  response = requests.get(url)
-  if response.status_code != 200:
-    print('Error fetching data from IotaWatt')
-    return JsonResponse({'error': 'Error fetching data from IotaWatt'}, status=500)
+    data = response.json().get('data', [])
+    if not data:
+        print('No data returned from IotaWatt')
+        return JsonResponse({'error': 'Error fetching data from IotaWatt'}, status=500)
 
-  data = response.json().get('data', [])
+    for d in data:
+        try:
+            fridge = float(d[2])
+        except (ValueError, TypeError):
+            fridge = 0.0
+        try:
+            battery = float(d[3])
+        except (ValueError, TypeError):
+            battery = 0.0
+        try:
+            recepticles = float(d[4])
+        except (ValueError, TypeError):
+            recepticles = 0.0
+        break  # Only process the first row
 
-  if not data:
-    print('No data returned from IotaWatt')
-    return JsonResponse({'error': 'Error fetching data from IotaWatt'}, status=500)
-  
-  for d in data:
-    try:
-      fridge = float(d[2])
-    except (ValueError, TypeError):
-      fridge = 0.0
-    
-    try:
-      battery = float(d[3])
-    except (ValueError, TypeError):
-      battery = 0.0
-    
-    try: 
-      recepticles = float(d[4])
-    except (ValueError, TypeError):
-      recepticles = 0.0
+    # Determine power source
+    if battery >= 1.0:
+        power_source = 'Battery'
+        if not request.session.get('battery_time_start'):
+            request.session['battery_time_start'] = datetime.now(timezone.utc).isoformat()
+    else:
+        power_source = 'Grid'
+        request.session.pop('battery_time_start', None)
 
-    break
+    # Estimate battery state
+    battery_percentage = 100
+    remaining_time = 3.1*60
 
-  if battery >= 1.0:
-    power_source = 'Battery'
-    # # Start the battery drain sim
-    # if battery_time_start == None:
-    #   battery_time_start = datetime.now(timezone.utc)
-    # battery_percentage, estimated_time = update_battery(battery_time_start)
-  else:
-    power_source = 'Grid'
-    # Restart battery time tracking
-    # battery_time_start = None
+    if power_source == 'Battery' and request.session.get('battery_time_start'):
+        battery_time_start = datetime.fromisoformat(request.session['battery_time_start'])
+        index = get_index(battery_time_start, time_intervals)
 
-  # fridge_temp = get_temp()
-  fridge_temp = 47.75
+        if index < len(battery_percentages):
+            battery_percentage = battery_percentages[index]
+            remaining_time = estimate_remaining_time(battery_percentage)
+            print(f"Battery updated: {battery_percentage}%, Estimated Time: {remaining_time // 60}h {remaining_time % 60}m", f"Index: {index}")
+        else:
+            battery_percentage = 0
+            remaining_time = 0
 
-  new_state = {
-    'system_current_power': fridge + recepticles,
-    'critical_load_current_power': recepticles,
-    'fridge_current_power': fridge,
-    'fridge_current_temp': fridge_temp,
-    'device_states': {},
-    'battery_current_power': battery,
-    'battery_charge': int(battery_percentage),
-    'battery_remaining_time': float(remaining_time),
-    'power_source': power_source,
-  }
+    # Use placeholder temp for now (or plug in get_temp() later)
+    fridge_temp = 47.75
 
-  return JsonResponse(new_state)
+    new_state = {
+        'system_current_power': fridge + recepticles,
+        'critical_load_current_power': recepticles,
+        'fridge_current_power': fridge,
+        'fridge_current_temp': fridge_temp,
+        'device_states': {},
+        'battery_current_power': battery,
+        'battery_charge': int(battery_percentage) if battery_percentage is not None else None,
+        'battery_remaining_time': float(remaining_time/60) if remaining_time is not None else None,
+        'power_source': power_source,
+    }
+
+    return JsonResponse(new_state)
 
 @login_required()
 def admin(request):
