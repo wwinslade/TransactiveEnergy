@@ -36,10 +36,3 @@ def get_index(now, time_intervals):
 #index = get_index(datetime.now(timezone.utc), time_intervals)
 
 
-if index < len(time_intervals):
-        battery_percentage = battery_percentages[index]  # Update battery percentage
-        remaining_time = estimate_remaining_time(battery_percentage)  # Update estimated time
-        index += 1
-        
-        print(f"Battery updated: {battery_percentage}%, Estimated Time: {remaining_time // 60}h {remaining_time % 60}m", f"Index: {index}")
-        #return battery_percentage, remaining_time / 60

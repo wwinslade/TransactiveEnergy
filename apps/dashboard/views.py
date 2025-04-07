@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from apps.devices.models import Device, KasaSwitch, Fridge
-from apps.dashboard.battery_management import estimate_remaining_time
+from apps.dashboard.battery_management import estimate_remaining_time, time_intervals, battery_percentages
 from .forms import DeviceForm, DeviceUpdateForm
 
 import cv2
@@ -16,7 +16,6 @@ from channels.layers import get_channel_layer
 import requests
 import json
 from datetime import datetime, timedelta, timezone
-
 from .models import ComedPriceData, UbibotSensorTemp
 
 import os
@@ -186,8 +185,15 @@ def dashboard(request):
   return render(request, 'dashboard.html', context)
 
 def update_dashboard_state(request):
-  battery_percentage = 100
-  estimated_time = 3.1
+  # battery_percentage = 100
+  # estimated_time = 3.1
+  if index < len(time_intervals):
+        battery_percentage = battery_percentages[index]  # Update battery percentage
+        remaining_time = estimate_remaining_time(battery_percentage)  # Update estimated time
+        index += 1
+        
+        print(f"Battery updated: {battery_percentage}%, Estimated Time: {remaining_time // 60}h {remaining_time % 60}m", f"Index: {index}")
+        #return battery_percentage, remaining_time / 60
 
   url = f'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-5s&end=s&group=5s&format=json&header=yes'
   response = requests.get(url)
