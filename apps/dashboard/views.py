@@ -21,7 +21,7 @@ from .models import ComedPriceData, UbibotSensorTemp
 import os
 import dotenv
 
-from .battery_management import update_battery
+from .battery_management import get_index, update_battery
 
 # Create your views here.
 def home(request):
@@ -187,6 +187,7 @@ def dashboard(request):
 def update_dashboard_state(request):
   # battery_percentage = 100
   # estimated_time = 3.1
+  index = get_index(datetime.now(timezone.utc), time_intervals)
   if index < len(time_intervals):
         battery_percentage = battery_percentages[index]  # Update battery percentage
         remaining_time = estimate_remaining_time(battery_percentage)  # Update estimated time
