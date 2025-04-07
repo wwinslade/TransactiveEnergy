@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from apps.devices.models import Device, KasaSwitch, Fridge
-from apps.dashboard.battery_management import estimate_remaining_time, time_intervals, battery_percentages
+from apps.dashboard.battery_management import estimate_remaining_time, time_intervals, battery_percentages, remaining_time
 from .forms import DeviceForm, DeviceUpdateForm
 
 import cv2
@@ -248,7 +248,7 @@ def update_dashboard_state(request):
     'device_states': {},
     'battery_current_power': battery,
     'battery_charge': int(battery_percentage),
-    'battery_remaining_time': float(estimated_time),
+    'battery_remaining_time': float(remaining_time),
     'power_source': power_source,
   }
 

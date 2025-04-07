@@ -29,7 +29,7 @@ def update_battery(battery_time_start):
     # then use delta to determine what index we should be at
 def get_index(now, time_intervals):
     for i in range(len(time_intervals) - 1):
-        if time_intervals[i] <= now < time_intervals[i + 1]:
+        if time_intervals[i] < now < time_intervals[i + 1]:
             return i
     return len(time_intervals) - 1 #Returns last index if needed
 
