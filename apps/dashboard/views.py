@@ -16,7 +16,7 @@ from channels.layers import get_channel_layer
 import requests
 import json
 from datetime import datetime, timedelta, timezone
-from .models import ComedPriceData, UbibotSensorTemp
+from .models import ComedPriceData, UbibotSensorTemp, BatteryData
 
 import os
 import dotenv

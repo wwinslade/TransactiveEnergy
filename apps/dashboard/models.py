@@ -14,3 +14,9 @@ class UbibotSensorTemp(models.Model):
 
   def __str__(self):
     return f'TempSensor: {self.timestamp} - {self.temp} deg F'
+  
+class BatteryData(models.Model):
+  timestamp = models.DateTimeField(primary_key= True, unique = True)
+  percent = models.FloatField(default = -1)
+  def __str__(self) :
+    return f'battery: {self.timestamp} - {self.percent}'
