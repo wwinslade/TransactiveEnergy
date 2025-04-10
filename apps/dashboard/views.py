@@ -221,9 +221,6 @@ def update_dashboard_state(request):
         power_source = 'Grid'
         request.session.pop('battery_time_start', None)
 
-    # Estimate battery state
-    battery_percentage = 100
-    remaining_time = 3.1*60
 
     if power_source == 'Battery' and request.session.get('battery_time_start'):
         battery_time_start = datetime.fromisoformat(request.session['battery_time_start'])
@@ -239,6 +236,20 @@ def update_dashboard_state(request):
 
     # Use placeholder temp for now (or plug in get_temp() later)
     fridge_temp = 47.75
+
+    simulated_battery = request.GET.get('battery')
+    if simulated_battery:
+      try:
+        simulated_battery = int(simulated_battery)
+        battery_percentage = (simulated_battery // 5) * 5  # Round down to nearest multiple of 5
+        remaining_time = estimate_remaining_time(battery_percentage)
+        print(f"Simulated Battery: {battery_percentage}%, Estimated Time: {remaining_time // 60}h {remaining_time % 60}m")
+      except ValueError:
+        battery_percentage = 100
+        remaining_time = 3.1 * 60
+    else:
+       battery_percentage = 100
+       remaining_time = 3.1 * 60
 
     new_state = {
         'system_current_power': fridge + recepticles,

@@ -51,6 +51,17 @@
             <h4>Est. Remaining Backup</h4>
             <p id="battery-remaining-time">0 hours</p>
           </div>
+          <div class="row mb-3 align-items-end">
+            <div class="col-auto">
+              <label for="battery-input" class="form-label mt-2">Battery Percentage %</label>
+            </div>
+            <div class="col-auto">
+              <input type="number" class="form-control" id="battery-input" placeholder="Battery % (e.g. , 67) ">
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-success" onclick="submitBatteryInput()">Enter</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -187,10 +198,32 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     }
   });
+  
+ let simulatedBattery = null;
+
+ function submitBatteryInput() {
+  let inputValue = parseInt(document.getElementById("battery-input").value);
+  if (isNaN(inputValue)) {
+    alert("Please enter a number.");
+    return;
+  }
+
+  // Round down to nearest multiple of 5
+  simulatedBattery = inputValue - (inputValue % 5);
+
+  // Clamp to 0–100
+  simulatedBattery = Math.max(0, Math.min(100, simulatedBattery));
+
+  fetchDashboardUpdate();  // Trigger immediate update
+ }
 
   // Function to request updates
   function fetchDashboardUpdate() {
-    fetch('/dashboard/update/')
+   let url = '/dashboard/update/';
+   if (simulatedBattery !== null) {
+    url += `?battery=${simulatedBattery}`;
+   }
+    fetch(url)
       .then(response => response.json())
       .then(data => {
         console.log(data);
