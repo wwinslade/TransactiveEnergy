@@ -6,7 +6,7 @@ from django.http import JsonResponse
 # Battery levels and corresponding total time in minutes
 battery_percentages = np.array([100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 
                                 45, 40, 35, 30, 25, 20, 15, 10, 5, 0])
-total_time_minutes = np.array([0, 11, 24, 36, 45, 55, 63, 70, 80, 90, 99, 
+total_time_minutes = np.array([0, 1, 24, 36, 45, 55, 63, 70, 80, 90, 99, 
                                107, 114, 120, 126, 132, 138, 155, 171, 181, 193])
 
 # Fit a quadratic model to reverse time values for better curve behavior

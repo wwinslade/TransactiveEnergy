@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function() {
   function fetchDashboardUpdate() {
    let url = '/dashboard/update/';
    if (simulatedBattery !== null) {
-    url += `?battery=${simulatedBattery}`;
+    url += `?battery=${simulatedBattery}`;;
    }
     fetch(url)
       .then(response => response.json())
