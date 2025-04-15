@@ -185,6 +185,8 @@ def dashboard(request):
   return render(request, 'dashboard.html', context)
 
 def update_dashboard_state(request):
+    print("=== update_dashboard_state view hit ===")
+    print("Request GET parameters:", request.GET) 
     url = 'http://192.168.0.111/query?select=[time.iso,input_0,Fridge,Solar,Recepticles]&begin=s-5s&end=s&group=5s&format=json&header=yes'
     response = requests.get(url)
 

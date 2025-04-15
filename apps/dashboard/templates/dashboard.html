@@ -99,6 +99,7 @@
 </div>
 
 <script>
+let simulatedBattery = null;
 document.addEventListener("DOMContentLoaded", function() {
   const weeklyPriceLabels = JSON.parse('{{ weeklyPriceLabels|safe }}');
   const weeklyPriceData = JSON.parse('{{ weeklyPriceData|safe }}');
@@ -199,69 +200,70 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
   
- let simulatedBattery = null;
+ 
 
  function submitBatteryInput() {
+  console.log("Button clicked");
+
   let inputValue = parseInt(document.getElementById("battery-input").value);
   if (isNaN(inputValue)) {
     alert("Please enter a number.");
     return;
   }
 
-  // Round down to nearest multiple of 5
   simulatedBattery = inputValue - (inputValue % 5);
-
-  // Clamp to 0–100
   simulatedBattery = Math.max(0, Math.min(100, simulatedBattery));
 
-  fetchDashboardUpdate();  // Trigger immediate update
- }
-
+  fetchDashboardUpdate();  // 
+}
   // Function to request updates
   function fetchDashboardUpdate() {
-   let url = '/dashboard/update/';
-   if (simulatedBattery !== null) {
-    url += `?battery=${simulatedBattery}`;;
-   }
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-
-        document.getElementById("system-load").innerText = data.system_current_power.toFixed(2) + " W";
-        document.getElementById("fridge-temp").innerText = data.fridge_current_temp.toFixed(2) + " F";
-        document.getElementById("power-source").innerText = data.power_source;
-        document.getElementById("battery-load").innerText = data.battery_current_power.toFixed(2) + " W";
-        document.getElementById("battery-remaining-time").innerText = data.battery_remaining_time.toFixed(1) + " hours";
-        document.getElementById("battery-charge-bar").style.width = data.battery_charge.toFixed(0) + "%";
-        document.getElementById("battery-charge-bar").innerText = data.battery_charge.toFixed(0) + "%";
-        
-        if (data.power_source === "Battery") {
-          document.getElementById("battery-charge-bar").classList.add("progress-bar-striped", "progress-bar-animated");
-        } else {
-          document.getElementById("battery-charge-bar").classList.remove("progress-bar-striped", "progress-bar-animated");
-        }
-
-        // Get current time as label
-        let currentTime = new Date().toLocaleTimeString();
-        liveLabels.push(currentTime);
-        liveLoadData.push(data.system_current_power);
-        if (liveLabels.length > 20) {
-          liveLabels.shift();
-          liveLoadData.shift();
-        }
-
-        systemLoadChart.update();
-      })
-      .catch(error => {
-        console.error('Error fetching dashboard update:', error);
-      });
+  let url = '/dashboard/update/';
+  if (simulatedBattery !== null) {
+    url += `?battery=${simulatedBattery}`; 
   }
 
-  setInterval(fetchDashboardUpdate, 5000);
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      console.log("Fetched Dashboard Update:", data);
 
-  // Initial fetch
-  fetchDashboardUpdate();
+      document.getElementById("system-load").innerText = data.system_current_power.toFixed(2) + " W";
+      document.getElementById("fridge-temp").innerText = data.fridge_current_temp.toFixed(2) + " F";
+      document.getElementById("power-source").innerText = data.power_source;
+      document.getElementById("battery-load").innerText = data.battery_current_power.toFixed(2) + " W";
+      document.getElementById("battery-remaining-time").innerText = data.battery_remaining_time.toFixed(1) + " hours";
+      document.getElementById("battery-charge-bar").style.width = data.battery_charge.toFixed(0) + "%";
+      document.getElementById("battery-charge-bar").innerText = data.battery_charge.toFixed(0) + "%";
+
+      if (data.power_source === "Battery" || data.power_source === "Battery (Simulated)") {
+        document.getElementById("battery-charge-bar").classList.add("progress-bar-striped", "progress-bar-animated");
+      } else {
+        document.getElementById("battery-charge-bar").classList.remove("progress-bar-striped", "progress-bar-animated");
+      }
+
+      let currentTime = new Date().toLocaleTimeString();
+      liveLabels.push(currentTime);
+      liveLoadData.push(data.system_current_power);
+      if (liveLabels.length > 20) {
+        liveLabels.shift();
+        liveLoadData.shift();
+      }
+
+      systemLoadChart.update();
+    })
+    .catch(error => {
+      console.error('Error fetching dashboard update:', error);
+    });
+}
+
+setInterval(fetchDashboardUpdate, 5000);
+
+// Initial fetch
+fetchDashboardUpdate();
+
+// Expose the function globally so the onclick handler can access it
+window.submitBatteryInput = submitBatteryInput;
 });
 </script>
 {% endblock %}
