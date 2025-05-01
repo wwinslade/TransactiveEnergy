@@ -81,7 +81,7 @@ def reschedule_device(device):
   scheduler.add_job(
     device_turn_on,
     'cron',
-    hour = device.on_window_begin.hour + 4, # account for UTC time
+    hour = (device.on_window_begin.hour + 4) % 24, # account for UTC time
     minute = device.on_window_begin.minute,
     args = [device.uuid, device.type],
     id = f'device_{device.uuid}_{device.type}_ON_{device.on_window_begin.hour}_{device.on_window_begin.minute}'
@@ -91,7 +91,7 @@ def reschedule_device(device):
   scheduler.add_job(
     device_turn_off,
     'cron',
-    hour = device.on_window_end.hour + 4, # account for UTC time
+    hour = (device.on_window_end.hour + 4) % 24, # account for UTC time
     minute = device.on_window_end.minute,
     args = [device.uuid, device.type],
     id = f'device_{device.uuid}_{device.type}_OFF_{device.on_window_end.hour}_{device.on_window_end.minute}'
@@ -145,7 +145,7 @@ def start():
       scheduler.add_job(
         device_turn_on,
         'cron',
-        hour = d.on_window_begin.hour + 4, # account for UTC time
+        hour = (d.on_window_begin.hour + 4) % 24, # account for UTC time
         minute = d.on_window_begin.minute,
         args = [d.uuid, d.type],
         id = f'device_{d.uuid}_{d.type}_ON_{d.on_window_begin.hour}_{d.on_window_begin.minute}'
@@ -155,7 +155,7 @@ def start():
       scheduler.add_job(
         device_turn_off,
         'cron',
-        hour = d.on_window_end.hour + 4, # account for UTC time
+        hour = (d.on_window_end.hour + 4) % 24, # account for UTC time
         minute = d.on_window_end.minute,
         args = [d.uuid, d.type],
         id = f'device_{d.uuid}_{d.type}_OFF_{d.on_window_end.hour}_{d.on_window_begin.minute}'
